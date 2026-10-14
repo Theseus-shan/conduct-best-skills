@@ -1,0 +1,12 @@
+* text=auto
+*.md text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+/设计文档 export-ignore
+/private export-ignore
+/local export-ignore
+/dist export-ignore
+/.agents export-ignore
+/.codex export-ignore

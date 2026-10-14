@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conduct Best Skills · 七阶段总控"
+  short_description: "按需核查上下文、澄清目标、编排能力并执行验证与修正的七阶段工作流"
+  default_prompt: "请使用 $conduct-best-skills，以 Balanced 策略完成当前任务，按风险加载必要阶段并提供成果与验证依据。"

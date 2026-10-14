@@ -1,0 +1,20 @@
+# Local design sources and task data are not part of the public repository.
+/设计文档/
+/private/
+/local/
+/dist/
+/.agents/
+/.codex/
+.env
+.env.*
+*.pem
+*.key
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,20 @@
+flowchart TD
+    U[User request] --> C[1 Context: load relevant sources]
+    C --> G[2 Goals: clarify and negotiate]
+    G --> P[3 Plan: discover and match capabilities]
+    P --> D{Authorized and feasible?}
+    D -->|Yes| E[4 Execute dependency-ready work]
+    D -->|Decision needed| W[Wait on affected work only]
+    W -->|Decision received| P
+    E --> V{5 Verify necessary criteria}
+    V -->|Pass| O[7 Deliver artifacts and evidence]
+    V -->|Gap with feasible repair| R[6 Diagnose and refine]
+    R -->|Artifact repair| E
+    R -->|Method of verification| V
+    R -->|Source issue| C
+    R -->|Goal change| G
+    R -->|Capability change| P
+    R -->|Limit or no feasible path| H[Accurate partial or blocked handoff]
+    D -->|No qualified fallback| H
+    E -->|Cancelled or cannot continue| H
+    H --> O
