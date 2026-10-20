@@ -45,7 +45,7 @@ The current version expresses this ambition as seven-stage workflow instructions
 
 A **Skill** is a folder of instructions an agent reads when needed. This repository provides **one coordinating Skill**, with seven stage references. Your host supplies the model, tools and optional subagents; separately installed specialist Skills supply domain methods.
 
-> **Early-stage, instruction-based implementation.** Package structure and documentation are checked locally. The 204 design-derived behavior cases remain `NOT_RUN`. The workflow below describes implemented instructions, not a demonstrated autonomous runtime. See the [validation record](docs/validation.md).
+> **Early-stage, instruction-based implementation.** Package structure and documentation are checked locally. The 204 design-derived behavior cases remain `NOT_RUN`. An earlier three-task A/B pilot found both arms passed all core tasks, with no observed outcome gain; it does not validate the revised instructions. The workflow below describes implemented instructions, not a demonstrated autonomous runtime. See the [validation record](docs/validation.md).
 
 ## Quick start
 
@@ -88,7 +88,7 @@ purpose and implementation limits, citing the files you read. Do not edit files.
 
 The expected output is a short, source-backed explanation. Check that the host actually loads the Skill; file presence alone does not prove discovery or correct behavior. If missing, check the project's path and host settings against the [official Skills documentation](https://learn.chatgpt.com/docs/build-skills).
 
-No extra configuration is required by this package. Specify **Quality First**, **Balanced**, **Adaptive**, or **Custom** in ordinary language. An explicit strategy takes precedence over a user-saved default. If neither exists, the instructions require one necessary question; Balanced is not an implicit default.
+No extra configuration is required by this package. Specify **Quality First**, **Balanced**, **Adaptive**, or **Custom** in ordinary language. An explicit strategy takes precedence over a user-saved default. If neither exists, choose an approach proportionate to task risk and size. Ask only about unresolved material quality, time, or cost tradeoffs. Simple tasks proceed directly without seven-stage narration or a full contract.
 
 | Environment | Evidence and support boundary |
 | --- | --- |
@@ -139,7 +139,7 @@ Clear, authorized work continues. Material goal changes or missing permissions r
 | Evidence and recovery | Separate execution from verification; bounded recovery, version-aware checks and targeted refinement |
 | Optional preferences | Authorized preferences rank eligible candidates; persistence and observations require actual host support |
 
-All six are **implemented as rules, not yet behavior-validated**. Package checks verify structure, not that a model follows every rule. [Claim-to-source audit](docs/audit.md).
+All six are **implemented as rules; full behavioral acceptance is pending**. An earlier three-task A/B pilot found both arms passed the core tasks, with no observed outcome gain; it does not validate this revision. Package checks verify structure, not that a model follows every rule. [Claim-to-source audit](docs/audit.md).
 
 ### How context and experience inform the work
 

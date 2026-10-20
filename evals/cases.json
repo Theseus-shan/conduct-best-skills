@@ -19,9 +19,10 @@
     "id": "stage-1/T03",
     "group": "stage-1",
     "scenario": "没有指定策略，也没有已保存默认值",
-    "expected": "询问用户，不擅自选择",
+    "expected": "按任务风险和规模自主选择方式，不为策略标签单独询问；仅无法消解的重要质量、时间或成本取舍需要澄清",
     "design_reference": "第一阶段.md:242",
-    "status": "NOT_RUN"
+    "status": "NOT_RUN",
+    "revision_note": "2026-10-20：原设计的强制策略询问改为按实际取舍澄清；原 design_reference 仅用于追溯。"
   },
   {
     "id": "stage-1/T04",

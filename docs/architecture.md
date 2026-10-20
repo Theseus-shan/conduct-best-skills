@@ -34,7 +34,7 @@ Editable branch-level source: [workflow.mmd](../assets/diagrams/workflow.mmd). T
 
 ## Three independent choices / 三个独立维度
 
-- **Execution strategy:** Quality First, Balanced, Adaptive or Custom. Current request → applicable user-saved default → necessary question. The package does not assign numeric budgets to these labels.
+- **Execution strategy:** Quality First, Balanced, Adaptive or Custom. Current request → applicable user-saved default → autonomous choice proportionate to risk and size; ask only about unresolved material tradeoffs. The package does not assign numeric budgets to these labels.
 - **Context depth:** L1 necessary rules/materials; L2 related dependencies and decisions; L3 deeper evidence, assumption and version checks.
 - **Planning depth:** P1 a few work nodes; P2 dependencies and capability mapping; P3 a detailed task graph and failure branches.
 

@@ -21,7 +21,7 @@
 
 根据影响决定确认级别，与 G0–G3 独立：A0 普通细化自动处理；A1 可选增强仅建议、原任务继续；A2 实质改变目标、路线、范围、重要交付、资源或验收，须复用或取得明确确认。部分接受只纳入已接受部分；沉默不等于同意，已拒绝方向不反复推销。
 
-契约字段见 [contracts.md](contracts.md)。区分 scope / non_goals、硬约束 / 软偏好 / 假设。每条验收采用 Requirement → Criterion → Evidence → Status，区分 Mandatory、Quality、Aspirational。科研审查可以交付严格反例或有依据的不确定性，不编造肯定结果、不承诺录用。
+简单目标用一句话说明结果与必要检查即可；需要结构化交接时才读取 [contracts.md](contracts.md)。区分 scope / non_goals、硬约束 / 软偏好 / 假设。每条验收采用 Requirement → Criterion → Evidence → Status，区分 Mandatory、Quality、Aspirational。科研审查可以交付严格反例或有依据的不确定性，不编造肯定结果、不承诺录用。
 
 信息状态：AGREED / DERIVED / PROPOSED / REJECTED / UNRESOLVED。契约生命周期：DRAFT → ACTIVE；关键变更标记 REVISION_REQUIRED，确认新版本后旧版 SUPERSEDED。普通明确请求直接构成授权依据，不要求重新批准原请求。
 

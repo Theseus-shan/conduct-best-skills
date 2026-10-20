@@ -32,6 +32,7 @@ PUBLIC_FILES = [
     "scripts/build_visuals.py", "scripts/check_docs.py",
     "README.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md",
     ".gitignore", ".gitattributes", "evals/README.md", "evals/cases.json",
+    "evals/optimization.md",
     "scripts/check_package.py", "scripts/build_release.py",
     ".github/ISSUE_TEMPLATE/bug_report.md",
     ".github/ISSUE_TEMPLATE/feature_request.md",

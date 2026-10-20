@@ -1,5 +1,17 @@
 # Documentation and release validation / 文档与发布验证
 
+## 当前规则修订 / 2026-10-20（Asia/Shanghai）
+
+本轮调整策略选择、轻量路径与按问题读取参考，简化规划字段，增加最小恢复记录。阶段 1/T03 的预期同步修订，目录仍为 204 项 NOT_RUN。下文 2026-10-15 的记录是历史验证范围，其中“核心 Skill 未修改”和“没有 Git 元数据”不描述当前工作区。
+
+本轮已运行：`scripts/check_package.py`、`scripts/check_docs.py`、skill-creator 的 `quick_validate.py` 和 `git diff --check`，全部通过。检查范围为结构、链接、元数据及文本差异，不是模型行为。
+
+已阅读本地旧版 A/B 报告：三个简单任务各运行一次，基线和旧版 Skill 均通过核心任务，未观察到结果提升。原始结果的工具过程主要来自 Agent 自述，最终文件与部分测试另有独立核查；没有完整轨迹、随机顺序或精确成本数据。它不代表完整验收，也不能用于证明本次修订的效果。
+
+新版三组对照按 [精简版评估协议](../evals/optimization.md) 执行，目前 NOT_RUN。没有将静态检查或对旧报告的阅读记为新的行为通过结果。
+
+## 历史发布记录
+
 Date: 2026-10-15 (Asia/Hong_Kong).
 
 This record distinguishes static checks, rendering and actual agent behavior. It does not certify the 204 design cases. See [the audit](audit.md) for claim sources and [the evaluation protocol](../evals/README.md) for behavioral evidence requirements.

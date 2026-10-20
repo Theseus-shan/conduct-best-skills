@@ -17,7 +17,7 @@ def main():
         errors.append("Missing UI metadata")
     if len(list((SKILL / "references").glob("stage-*.md"))) != 7:
         errors.append("Expected seven stage references")
-    documents = [*ROOT.glob("*.md"), ROOT / "evals" / "README.md",
+    documents = [*ROOT.glob("*.md"), *(ROOT / "evals").glob("*.md"),
                  *SKILL.rglob("*.md"), *(ROOT / ".github").rglob("*.md")]
     for path in documents:
         text = path.read_text(encoding="utf-8")
