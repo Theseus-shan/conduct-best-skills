@@ -1,5 +1,28 @@
 # Documentation and release validation / 文档与发布验证
 
+## 可执行闭环 / 2026-10-22（Asia/Hong_Kong）
+
+本轮新增随 Skill 分发的 [conduct.py](../skills/conduct-best-skills/scripts/conduct.py) 与 [demo.py](../skills/conduct-best-skills/scripts/demo.py)。这是本地程序的功能验证，独立于仍为 NOT_RUN 的 204 项 Agent 行为目录，也不替代三组模型 A/B 实验。
+
+已实际运行 22 项回归，覆盖真实检查失败与修复、文件/测试/契约漂移、证据日志修改或丢失、检查中变更、上游重验使下游过期、独立分支继续、可选条件失败披露、未知写入、超时、缺失可执行文件、有限尝试、锁与中断恢复、路由硬约束和 CLI 执行确认。第一次有效测试发现上游重验没有使下游过期，修复并增加依赖版本核验后全部通过。测试先前也遇到受限环境系统临时目录不可写，已将夹具移入项目的忽略目录；不以环境错误充当程序通过。
+
+一键演示实际完成：UNTESTED → FAIL → PASS → STALE → BLOCKED → PASS。最后核对模拟用户新增函数保持原样、模拟外部记录数为 1、不可用高偏好候选被排除。演示使用固定补丁和合成外部状态，证明工具机制，不证明模型会自主完成同类任务。
+
+复现与机器记录：
+
+```text
+python scripts/validate_runtime.py --output local/runtime-results.json
+python skills/conduct-best-skills/scripts/demo.py --output local/new-demo
+python scripts/check_package.py
+python scripts/check_docs.py
+python scripts/build_release.py
+python scripts/check_release.py
+```
+
+`validate_runtime.py` 输出每条实际测试结果、环境及源文件 SHA-256；原始测试失败堆栈留在运行输出。发布检查比对 ZIP 白名单和逐字节内容，在隔离目录运行安装包演示与状态命令，并在解压源码中运行静态检查。Python 3.10 语法解析不等于在 3.10 解释器上执行；当前本地执行环境为 Windows / Python 3.14.7。Linux 和其他 Python 版本需由后续实际 CI 运行验证。
+
+作用与边界：以前这些约束只有指令；现在启用工具后，过期/缺失证据不会返回当前 PASS，未完成依赖或未知操作会拒绝相应检查。宿主仍需设计有意义的检查、列全输入、核验外部观察，并完成专业实现。文件哈希不是防恶意篡改的审计系统，工具不是权限沙箱或自动学习服务。
+
 ## 当前规则修订 / 2026-10-20（Asia/Shanghai）
 
 本轮调整策略选择、轻量路径与按问题读取参考，简化规划字段，增加最小恢复记录。阶段 1/T03 的预期同步修订，目录仍为 204 项 NOT_RUN。下文 2026-10-15 的记录是历史验证范围，其中“核心 Skill 未修改”和“没有 Git 元数据”不描述当前工作区。

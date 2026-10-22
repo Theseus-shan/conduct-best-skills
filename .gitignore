@@ -5,6 +5,7 @@
 /dist/
 /.agents/
 /.codex/
+/.conduct/
 .env
 .env.*
 *.pem

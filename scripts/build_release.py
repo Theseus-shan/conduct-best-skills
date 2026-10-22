@@ -13,7 +13,7 @@ SKILL_FILES = [
     "references/stage-3-planning.md", "references/stage-4-execution.md",
     "references/stage-5-verification.md", "references/stage-6-refinement.md",
     "references/stage-7-delivery.md", "references/contracts.md",
-    "references/learning.md",
+    "references/learning.md", "references/runtime.md", "scripts/conduct.py", "scripts/demo.py",
 ]
 PUBLIC_FILES = [
     "assets/illustrations/shared-route.png", "assets/illustrations/interaction-scenes.png",
@@ -25,7 +25,7 @@ PUBLIC_FILES = [
     "assets/diagrams/before-after-cn.svg", "assets/diagrams/agent-interaction-cn.svg",
     "assets/diagrams/orchestration-cn.svg",
     "README_CN.md", "docs/architecture.md", "docs/audit.md", "docs/examples.md",
-    "docs/visual-design.md", "docs/validation.md",
+    "docs/visual-design.md", "docs/validation.md", "docs/implementation-plan.md", "tests/test_runtime.py",
     "assets/branding/hero.svg", "assets/diagrams/workflow.svg",
     "assets/diagrams/workflow.mmd", "assets/diagrams/before-after.svg",
     "assets/diagrams/agent-interaction.svg", "assets/diagrams/orchestration.svg",
@@ -33,7 +33,7 @@ PUBLIC_FILES = [
     "README.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md",
     ".gitignore", ".gitattributes", "evals/README.md", "evals/cases.json",
     "evals/optimization.md",
-    "scripts/check_package.py", "scripts/build_release.py",
+    "scripts/check_package.py", "scripts/build_release.py", "scripts/check_release.py", "scripts/validate_runtime.py",
     ".github/ISSUE_TEMPLATE/bug_report.md",
     ".github/ISSUE_TEMPLATE/feature_request.md",
     ".github/PULL_REQUEST_TEMPLATE.md", ".github/workflows/ci.yml",

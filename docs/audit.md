@@ -1,5 +1,7 @@
 # Repository audit / 仓库审查
 
+2026-10-22 更新：现已增加 [本地闭环工具](../skills/conduct-best-skills/references/runtime.md)，支持持久化任务契约、DAG 校验、能力过滤、实际检查执行、证据哈希与过期判定、未知操作记录、有限尝试及报告。回归和演示结果见[验证记录](validation.md)。下列历史快照中“没有执行工具/本地存储”的描述不再代表当前包；外部连接、专业判断、权限和模型效果仍不由此工具保证。
+
 2026-10-20 补充：入口现按问题加载参考，未指定策略不再单独阻塞，完整契约仅用于需要它的复杂交接。旧版三组探索性 A/B 的核心结果双方均通过，未观察到增益；新版行为对照仍未运行。下文为原审查快照，历史环境和“无已完成报告”描述不代表当前状态。最新范围见 [验证记录](validation.md)。
 
 Audit date: 2026-10-15 (Asia/Hong_Kong). Scope: the supplied workspace, before README implementation; no Git repository metadata or remote URL was present. No repository `AGENTS.md` was found. Original design files are private background and are not release dependencies.

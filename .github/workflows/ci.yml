@@ -21,8 +21,14 @@ jobs:
           python-version: '3.12'
       - name: Check package
         run: python scripts/check_package.py
+      - name: Runtime regressions
+        run: python scripts/validate_runtime.py --output local/runtime-results.json
+      - name: Executable demonstration
+        run: python skills/conduct-best-skills/scripts/demo.py --output local/ci-demo
       - name: Build distribution archives
         run: python scripts/build_release.py
+      - name: Test extracted release archives
+        run: python scripts/check_release.py
       - uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-latest'
         with:

@@ -1,5 +1,7 @@
 # 行为验收方法
 
+本地辅助程序的回归独立运行：`python scripts/validate_runtime.py --output local/runtime-results.json`；一键演示见[工具指南](../skills/conduct-best-skills/references/runtime.md)。这类程序检查不修改以下 204 项 Agent 场景状态，也不计入模型行为通过率。
+
 `cases.json` 保存设计中的 204 项验收场景：阶段 1 为 24 项，阶段 2 为 42 项，阶段 3 为 84 项，阶段 4–7 含端到端场景共 54 项。ID 增加阶段前缀以避免重号，项目特定对象已泛化；全部初始状态为 NOT_RUN。
 
 ## 实施流程

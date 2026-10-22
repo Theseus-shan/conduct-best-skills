@@ -45,11 +45,11 @@ The current version expresses this ambition as seven-stage workflow instructions
 
 A **Skill** is a folder of instructions an agent reads when needed. This repository provides **one coordinating Skill**, with seven stage references. Your host supplies the model, tools and optional subagents; separately installed specialist Skills supply domain methods.
 
-> **Early-stage, instruction-based implementation.** Package structure and documentation are checked locally. The 204 design-derived behavior cases remain `NOT_RUN`. An earlier three-task A/B pilot found both arms passed all core tasks, with no observed outcome gain; it does not validate the revised instructions. The workflow below describes implemented instructions, not a demonstrated autonomous runtime. See the [validation record](docs/validation.md).
+> **Now includes an executable local companion.** The Skill ships dependency validation, capability filtering, actual check execution, version-bound evidence, unknown-operation reconciliation and recovery reports. See the [validation record](docs/validation.md) for regressions and demonstrations. The 204 Agent behavior cases remain `NOT_RUN`; the earlier three-task A/B pilot showed no core outcome gain, and no improved model performance is claimed.
 
 ## Quick start
 
-You need a Codex environment that discovers local Skills and can read project files. Python 3.10+ is needed only for checks and packaging; no Python packages or project-specific API keys are required. Specialist tools may have their own dependencies.
+You need a Codex environment that discovers local Skills and can read project files. The optional local companion, checks and packaging need Python 3.10+; no Python packages or project-specific API keys are required. Specialist tools may have their own dependencies.
 
 Download and extract this repository, then open a terminal **at its root**. For a first project-local installation, choose one block. An existing destination is deliberately left untouched.
 
@@ -96,6 +96,21 @@ No extra configuration is required by this package. Specify **Quality First**, *
 | Other Skill-aware agents | Potentially adaptable Markdown; installation, invocation and runtime behavior unverified. |
 | Windows / Linux package CI | Workflow configured for both; local Windows checks run. No remote CI result claimed. |
 
+## Run it and inspect the evidence
+
+Run these commands in the source repository. The demonstration creates a new directory only; choose another name if it already exists.
+
+```sh
+python skills/conduct-best-skills/scripts/demo.py --output local/conduct-demo
+python skills/conduct-best-skills/scripts/conduct.py --workspace local/conduct-demo report --format markdown
+```
+
+It produces real check logs, JSON evidence and a Markdown report through **FAIL → PASS → user edit makes evidence STALE → unknown operation causes BLOCKED → reconciliation and recheck PASS**. It checks that the added code survives and the simulated record is not duplicated. A fixed fixture patch demonstrates the mechanism; this is not an autonomous Agent repair trial.
+
+The useful difference: **an old passing check stops counting after its tracked files change; rerunning an upstream check also invalidates dependent evidence.** Each `status` call rechecks versions and explains next actions and remaining attempts. Capability routing explains exclusions before considering preferences.
+
+For a real task, ask the host to use $conduct-best-skills, establish acceptance from current requirements, enable project-local evidence, repair failed checks and deliver a report for the current artifacts. The host implements and applies domain judgment; the companion records and checks evidence. See the [runtime guide](skills/conduct-best-skills/references/runtime.md) for contracts, recovery and capability catalogs.
+
 ## Why a coordinating Skill?
 
 To move toward this vision, the coordinating Skill carries the intended outcome through capability selection, execution and acceptance. It organizes the handoffs you would otherwise have to manage, so each step has a clear reason to contribute to the result.
@@ -139,7 +154,7 @@ Clear, authorized work continues. Material goal changes or missing permissions r
 | Evidence and recovery | Separate execution from verification; bounded recovery, version-aware checks and targeted refinement |
 | Optional preferences | Authorized preferences rank eligible candidates; persistence and observations require actual host support |
 
-All six are **implemented as rules; full behavioral acceptance is pending**. An earlier three-task A/B pilot found both arms passed the core tasks, with no observed outcome gain; it does not validate this revision. Package checks verify structure, not that a model follows every rule. [Claim-to-source audit](docs/audit.md).
+All six have workflow instructions; capability filtering, dependencies, version-bound evidence and recovery also have executable local support. Full Agent behavioral acceptance is pending. Program regressions do not establish model compliance or an overall gain against a baseline. [Claim-to-source audit](docs/audit.md).
 
 ### How context and experience inform the work
 
@@ -188,13 +203,13 @@ flowchart TD
     E --> V[Main agent verifies and delivers]
 ```
 
-This is a **logical architecture**. At runtime, the host reads Markdown and operates through its own interfaces. Stage names and contracts are conventions, not executable services or an enforced state machine.
+This is a **logical architecture**. The host reads Markdown and operates through its own interfaces. The optional local companion persists contracts, checks and recovery records and verifies versions. The host still drives the seven stages; they are not background services.
 
 The design separates **context depth from planning depth; suggestions from accepted goals; operation success from verified output.** Every extra Skill, agent or retry should serve a requirement. Simple tasks can stay in the conversation.
 
 | Repository area | Purpose |
 | --- | --- |
-| [skills/conduct-best-skills/](skills/conduct-best-skills/) | One entry, seven stage references, contracts, learning rules and UI metadata |
+| [skills/conduct-best-skills/](skills/conduct-best-skills/) | One entry, seven stage references, local CLI and demo, contracts, learning rules and UI metadata |
 | [evals/](evals/) | 204 design cases and a manual behavior evaluation protocol |
 | [docs/](docs/) | Architecture, recipes, evidence audit, visual design and validation |
 | [assets/](assets/) | Original editable SVGs and Mermaid workflow source |
@@ -202,7 +217,7 @@ The design separates **context depth from planning depth; suggestions from accep
 
 ## Limits and next steps
 
-There is no background scheduler, permission interceptor, event collector, agent isolation layer or storage engine. This package cannot guarantee remote cancellation, inspect inaccessible history, or make unavailable tools usable. Memory, checkpoints and cross-project preference reuse require suitable interfaces and authorization. Skill instructions are currently in Chinese; bilingual READMEs do not imply an English translation of the Skill itself.
+The package provides opt-in project-local JSON state and check logs. It has no background scheduler, permission interceptor, general event collector or agent isolation layer. It cannot guarantee remote cancellation, inspect inaccessible history, or make unavailable tools usable. Cross-platform memory and cross-project preferences still need real interfaces and authorization. Skill instructions are currently in Chinese; bilingual READMEs do not imply an English translation of the Skill itself.
 
 Progress toward this vision requires real-task evidence that goal understanding, capability composition, context reuse and preference learning work as intended.
 
@@ -213,7 +228,9 @@ Progress toward this vision requires real-task evidence that goal understanding,
 ```sh
 python scripts/check_package.py
 python scripts/check_docs.py
+python scripts/validate_runtime.py
 python scripts/build_release.py
+python scripts/check_release.py
 ```
 
 The build creates `dist/conduct-best-skills-source.zip` (public source, docs and visuals) and `dist/conduct-best-skills-skill.zip` (standalone Skill and license). An explicit allowlist excludes private design material and local state. Unzip the **Skill** archive into your host's Skill directory, preserving its `conduct-best-skills/` folder. The source archive is for the whole repository.

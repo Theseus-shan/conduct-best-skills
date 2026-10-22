@@ -1,5 +1,9 @@
 # Architecture / 技术架构
 
+## Executable local companion / 可执行本地辅助工具
+
+[Runtime guide](../skills/conduct-best-skills/references/runtime.md) describes the optional Python CLI shipped inside the Skill. The host defines acceptance, performs implementation and supplies observed capability facts. The companion validates the dependency graph, filters those candidates, executes reviewed checks, and stores project-local JSON state and evidence logs. `status` recomputes file and evidence hashes, detects stale dependencies, and supplies recovery actions. It does not schedule agents or provide permissions, remote adapters or automatic learning. The instruction architecture below remains host-driven; earlier descriptions of absent runtime support refer to the seven-stage orchestration layer, not this new local companion.
+
 [English README](../README.md) · [中文 README](../README_CN.md)
 
 ## Purpose before mechanism / 先有目标，再有机制

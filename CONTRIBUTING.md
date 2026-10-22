@@ -4,15 +4,17 @@
 
 ## 开发环境
 
-静态检查与发布脚本使用 Python 3.10+ 标准库，不需要安装运行依赖。
+本地辅助工具、检查与发布脚本使用 Python 3.10+ 标准库，不需要安装运行依赖。
 
 ```sh
 python scripts/check_package.py
 python scripts/check_docs.py
+python scripts/validate_runtime.py
 python scripts/build_release.py
+python scripts/check_release.py
 ```
 
-第一条检查技能结构、链接及案例目录；第二条检查文档链接、锚点、SVG 与双语命令；第三条先检查再构建发布包。它们不执行模型行为验收，实际行为评估方法见 [evals/README.md](evals/README.md)。
+依次检查技能与案例目录、文档、程序功能回归、构建和解压后的独立运行。程序回归使用隔离的合成项目，实际执行检查命令与状态转换；它不替代模型行为验收，后者见 [evals/README.md](evals/README.md)。新增运行文件、测试与说明必须进入发布白名单。
 
 README 保持中英文信息一致。视觉规范见 [docs/visual-design.md](docs/visual-design.md)，修改生成脚本后运行 `python scripts/build_visuals.py`，并实际检查 SVG 渲染。新增公开资源必须进入打包白名单。
 
