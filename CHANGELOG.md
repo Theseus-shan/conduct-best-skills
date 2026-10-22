@@ -66,3 +66,9 @@
 - Bound invocation evidence to task intent; changed goals or acceptance flag older calls for review without deleting history.
 - Added evidence-gap guidance and read-only project execution dependencies, check evidence, remaining attempts and unknown-operation status.
 - Updated product positioning, skill continuation guidance, bilingual documentation and synthetic cockpit showcase. The companion remains host-driven with partial recorded history.
+
+## Work graph and Agent inbox — 2026-10-22
+
+- Replaced the default stage overview with actual project work, dependencies, node details, linked artifact previews and history. Empty projects do not receive invented tasks.
+- Added revision-safe work plans, idempotent pending change requests and Agent-only resolution with evidence references. Calls bind to the work-plan version as well as the task brief.
+- Added start/resume/change/delivery inbox guidance, bilingual usage documentation, a refreshed synthetic screenshot and work-graph regression coverage. Browsers still do not wake or execute host Agents.

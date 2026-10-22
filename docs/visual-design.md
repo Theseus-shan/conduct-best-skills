@@ -100,8 +100,8 @@ The layout was informed by [Plane](https://github.com/makeplane/plane)'s project
 
 Public screenshots [workflow](../assets/workbench/workflow.png) and [preferences](../assets/workbench/preferences.png) render the actual frontend with `scripts/preview_workbench.py`. All projects, chats, evidence references and feedback are synthetic. The preview does not import a real index. PNGs are captured from the browser, not AI-generated mockups; no personal screenshot is used. Run the preview to inspect motion, which a still image cannot show.
 
-## Harness 驾驶舱
+## Harness 工作现场
 
-沿用深色星系背景、克制的青蓝与紫色高光。默认视图以目标卡片开场，七阶段导航连接上下文、目标、规划、执行、验证、改进与交付；双栏展示阶段信息、证据缺口、能力安排和版本关系。自然语言编辑器按八类任务信息分组，窄屏改为单栏。执行依赖和验收详情采用可展开项，避免一次暴露全部细节。
+沿用深色星系背景、克制的青蓝与紫色高光。默认视图以当前工作和下一步开场，按真实依赖排列工作节点，用发光连线连接。旁栏展示方案与能力、成果与验收、调整请求，下方汇总待处理信号和历程。窄屏切为单栏，工作图内部可横向滚动；任务背景与底层验收收纳为可展开详情。空项目没有预置节点。
 
-`assets/workbench/harness.png` 展示合成任务驾驶舱。填写状态、关注阶段、调用结果与实际验证分别编码；阶段按钮只切换阅读视角，不暗示推进或完成。
+`assets/workbench/harness.png` 展示纯合成工作图。连线表示依赖，短暂光点回放近期明确记录的调用，不是实时遥测；减少动态效果设置下保持静态。手动状态、请求入队、调用结果与实际验收分别编码，点击节点不推进工作。

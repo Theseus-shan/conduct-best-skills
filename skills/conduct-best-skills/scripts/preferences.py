@@ -261,7 +261,9 @@ def view(root, selected=None, types=None):
     from harness import dashboard, tasks, execution
     result['harness'] = dashboard(root, task, result['activity']['calls'])
     result['execution'] = execution(root)
-    result["tasks"] = sorted(set(result["tasks"]) | set(tasks(root)) | {c["task"] for c in result['activity']["calls"]} | ({task} if task else set()))
+    from workflow import view as workflow_view
+    result['workgraph'] = workflow_view(root, result['activity']['calls'], result['execution'])
+    result["tasks"] = sorted(set(result["tasks"]) | set(tasks(root)) | {n['task'] for n in result['workgraph']['nodes']} | {c["task"] for c in result['activity']["calls"]} | ({task} if task else set()))
     return result
 
 
@@ -306,10 +308,13 @@ def make_server(root, port=0, home=None):
             try:
                 if parts.path == f"/{token}/":
                     return self.send(200, page.read_bytes(), "text/html; charset=utf-8")
-                if parts.path not in {f"/{token}/api/preferences", f"/{token}/api/reflection"}:
+                if parts.path not in {f"/{token}/api/preferences", f"/{token}/api/reflection", f"/{token}/api/artifact"}:
                     return self.send(404, {"error": "Not found"})
                 query = parse_qs(parts.query, keep_blank_values=True)
                 workspace = self.workspace(query)
+                if parts.path.endswith('/artifact'):
+                    from workflow import artifact
+                    return self.send(200, artifact(workspace, query.get('node', [''])[0], query.get('path', [''])[0]))
                 if parts.path.endswith('/reflection'):
                     from activity import report, markdown
                     return self.send(200, markdown(report(workspace, query.get("task", [None])[0] or None)).encode('utf-8'), "text/markdown; charset=utf-8")
@@ -330,7 +335,7 @@ def make_server(root, port=0, home=None):
 
         def do_POST(self):
             parts = urlsplit(self.path)
-            if not self.authorized() or parts.path not in {f"/{token}/api/preferences", f"/{token}/api/rules", f"/{token}/api/activity", f"/{token}/api/projects", f"/{token}/api/harness"} or self.headers.get("X-Conduct-Edit") != "1":
+            if not self.authorized() or parts.path not in {f"/{token}/api/preferences", f"/{token}/api/rules", f"/{token}/api/activity", f"/{token}/api/projects", f"/{token}/api/harness", f"/{token}/api/workflow"} or self.headers.get("X-Conduct-Edit") != "1":
                 return self.send(403, {"error": "Local editor required"})
             try:
                 length = int(self.headers.get("Content-Length", "0"))
@@ -342,6 +347,11 @@ def make_server(root, port=0, home=None):
                     from workbench import register, unregister
                     require(body.get("action") in {"register", "unregister"}, "Invalid project action")
                     result = register(home, body["root"], body.get("name")) if body["action"] == 'register' else unregister(home, body["id"])
+                elif parts.path.endswith('/workflow'):
+                    from workflow import save_node, request_change
+                    workspace = self.workspace(query)
+                    require(body.get('action') in {'node', 'request'}, 'Invalid workflow action')
+                    result = save_node(workspace, body['node'], body.get('revision')) if body['action'] == 'node' else request_change(workspace, body['node'], body['text'], body.get('revision'), body['request_id'])
                 elif parts.path.endswith('/harness'):
                     from harness import save as save_brief
                     result = save_brief(self.workspace(query), body['task'], body['data'], body.get('revision'))

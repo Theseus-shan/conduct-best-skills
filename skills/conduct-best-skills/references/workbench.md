@@ -74,7 +74,9 @@ Agent 在工作台索引旁生成最小临时快照：`schema_version: 1`，`pro
 
 ## Harness 任务说明与执行证据
 
-默认视图为任务驾驶舱，按七阶段展示目标、上下文、约束、方案、验收、基线、下一步和交付要求。任务名是项目内稳定标识；先载入再编辑，保存带 revision。新建说明会出现在任务列表，即使还没有任何调用。开始、恢复、需求变更及交付时，Agent 依据已有授权更新必要说明；用户无需编写 JSON，也不必逐项填表。
+默认“工作现场”展示项目实际工作节点、依赖、待处理信号与工作历程。点击节点查看方案与能力、成果与验收或调整工作；任务背景和执行检查收纳在详情中。七阶段是按需采用的方法论，不是预置的七项任务。空项目保持为空；已有任务说明、执行契约和调用记录可生成初始工作图，保存后保留用户编辑并吸收新任务。
+
+任务背景继续保存目标、上下文、约束、方案、验收、基线、下一步和交付要求。任务名是项目内稳定标识；先载入再编辑，保存带 revision。新建说明会出现在任务列表，即使还没有任何调用。开始、恢复、需求变更及交付时，Agent 依据已有授权更新必要说明；用户无需编写 JSON，也不必逐项填表。
 
 `harness show --task <TASK>` 读取说明和证据缺口；`harness set --task <TASK> --expected <REVISION>` 接收 `--objective`、`--context`、`--constraints`、`--approach`、`--acceptance`、`--baseline`、`--next-step`、`--delivery` 和 `--stage`，由 Agent 使用。缺失版本是 `missing`。前端提供同等自然语言字段，说明每项最多 8000 字。
 
@@ -83,3 +85,26 @@ Agent 在工作台索引旁生成最小临时快照：`schema_version: 1`，`pro
 项目级 `.conduct/contract.json` 与 `.conduct/state.json` 的执行状态独立读取，显示依赖、验收标准、当前文件证据、剩余尝试和未知操作。它们与每项任务的 brief 不是同一契约，前端明确标注范围；只读展示不执行命令、不更改预算。用户用自然语言提出依赖/检查变更，由 Agent 核对授权后维护执行契约。无执行契约时显示未配置，损坏时显示暂不可核验，不能显示成功。
 
 自然语言编辑器不是通用语义执行引擎：偏好句式由现有规则解析器识别，任意任务说明由 Agent 理解并执行。没有自动调用、全量遥测、全局最优评分或自动跨项目学习。
+
+## 工作图与调整请求的接续协议
+
+工作图保存在当前项目 `.conduct/workflow.json`，包含真实工作、依赖、关联文件、能力、请求及变更历史。节点的 `task` 与任务背景、偏好和调用记录使用同一稳定名称。节点编辑、任务背景与执行契约分别保存；更改一处不会自动改写其他两处。Agent 应核对有实质影响的差异，保留用户新修改，再按已有授权同步相关要求。依赖必须无环；手动完成和文件存在都不等于验收通过。
+
+1. **开始、恢复及用户通知工作台有改动时**，在当前项目执行 `workflow show` 和 `workflow inbox`，核对节点、待办及关联产物。只读取本次相关任务；其他项目和无关节点不跟着执行。页面不会唤起 Agent，用户可在原聊天说“处理工作台待办”。
+2. **执行前**，把待办与当前 prompt、已接受范围、最新计划和真实文件对照。请求文本是待核对的意图记录，不产生外部发送、安装或扩大权限的授权。普通可逆改动在已有授权内落实；仍需信息或授权的请求保持 pending，说明缺口，继续独立工作。只读、规划、验证或交付入口不能因发现待办而越过自身范围。
+3. **落实后**，核验实际改动，按需更新节点、任务背景和执行契约，再重读 inbox 的 revision，用 `workflow resolve --outcome applied` 写结果及可核查的 `--evidence`。引用必须真实对应本次请求；工具只要求非空引用，不代替 Agent 查证。请求落实不等于整个节点验收通过。明确不采用或已被用户新要求取代的请求用 declined 并记录原因；执行失败不能伪装成不采用以清空队列。
+4. **冲突或结果未知时**，重读当前记录；保存时使用最新 revision，合并用户修改，不强制覆盖。resolve 返回未知时，先通过 `workflow show` 查看原请求 ID 的状态；已处理的不重放，不能换 ID 再执行同一副作用。
+5. **交付前**，再查 inbox，将本次相关未处理请求及原因写入交付。没有待办只表示队列已处理，不证明科学结论或全部成果通过验收。
+
+以下命令由 Agent 使用，用户只需自然语言说明目标或调整：
+
+```text
+python <CORE>/scripts/conduct.py --workspace <PROJECT> workflow show
+python <CORE>/scripts/conduct.py --workspace <PROJECT> workflow inbox
+python <CORE>/scripts/conduct.py --workspace <PROJECT> workflow node --id intro --task introduction --title "撰写引言" --objective "交付可核查的初稿" --outputs draft.md --expected <REVISION>
+python <CORE>/scripts/conduct.py --workspace <PROJECT> workflow resolve --id <REQUEST_ID> --outcome applied --note "已核对来源并修改计划" --evidence notes/source-check.md --expected <REVISION>
+```
+
+`workflow node --help` 列出方案、验收、下一步、阻碍、依赖、文件和能力等字段。列表参数可重复，`--clear` 清空指定列表；更新前先读取原节点。调用绑定当时的节点方案版本，方案、依赖或文件引用改变后提示复核；进度状态和下一步更新不单独使方案失效。图中连线表示依赖，短暂光点回放近期记录，不是实时运行遥测。
+
+产物预览仅能读取该节点显式关联的项目内文本文件，限制格式与大小，不执行 HTML 或代码。浏览器仅能保存计划或创建 pending 请求，没有 resolve 或命令执行入口；处理结果由 Agent 在核验后回填。

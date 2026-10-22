@@ -30,7 +30,7 @@ After installation, start in ordinary language. You do not need to select a work
 
 Simple questions and small edits stay small. For complex work, the agent chooses relevant specialist Skills and handles optional local evidence configuration.
 
-**Current checks:** 164 program regressions (162 passed, 2 environment-dependent skips), browser checks of the workbench and package extraction checks. The earlier three fresh-context small-task trials remain a separate observation, not a full behavior evaluation. [Validation and scope](docs/validation.md).
+**Current checks:** 176 program regressions (174 passed, 2 environment-dependent skips), browser checks of the workbench and package extraction checks. The earlier three fresh-context small-task trials remain a separate observation, not a full behavior evaluation. [Validation and scope](docs/validation.md).
 
 Does any of this sound familiar?
 
@@ -132,13 +132,15 @@ Each workspace has editable `.conduct/preferences.json`, with optional `.conduct
 
 ## Visual workbench
 
-The task cockpit follows the full lifecycle: **context → goals → planning → execution → verification → refinement → delivery**. Edit objectives, context, constraints, approach, acceptance criteria, improvement baseline, next steps and delivery requirements in natural language. Project defaults and task overrides remain separate, with the current prompt taking precedence.
+The default work surface maps actual project work and dependencies. Select a node to inspect its approach, capabilities, outputs, acceptance evidence, change requests and history. Edit plans or request changes in natural language. Empty projects stay empty; the seven stages remain a method to consult when needed. Project defaults and task overrides stay separate, with the current prompt taking precedence.
 
-![Agent Harness task cockpit with seven stages and natural-language task intent; synthetic demonstration.](assets/workbench/harness.png)
+![Agent Harness work graph with actual dependencies, approach, capabilities, pending requests and history; synthetic demonstration.](assets/workbench/harness.png)
 
 *All projects, task descriptions, calls and feedback in these screenshots are synthetic.*
 
-The cockpit connects intent to selected capabilities and recorded evidence. Calls retain the task brief version used at invocation; changed goals or acceptance requirements flag older calls for review. Optional execution contracts expose dependencies, check status, evidence, remaining attempts and unresolved operations. Browsing does not run checks. Written intent, recorded invocation and verified output are different facts.
+The graph brings plans, linked artifacts and invocation evidence together. Calls retain both the task brief and work-plan version used at invocation; changed plans or acceptance requirements flag older calls for review. Preview explicitly linked text files, and inspect optional execution checks, evidence, remaining attempts and unresolved operations. A manual completion mark or an existing file does not establish verification.
+
+Saved changes enter a pending Agent inbox. Tell Codex in the original chat to process workbench requests; the Agent checks the current authorization, implements the relevant changes and records the outcome with evidence. The page does not wake Codex or execute commands. Agents check relevant pending requests at start, resume and delivery. [Work graph and request handoff protocol](skills/conduct-best-skills/references/workbench.md#工作图与调整请求的接续协议).
 
 This is an instruction Skill with a local companion, not a host-level interceptor. Codex projects/chats use snapshots, call history has partial coverage, and improvement guidance does not certify a globally optimal solution.
 

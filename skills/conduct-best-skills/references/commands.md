@@ -18,6 +18,6 @@
 | `deliver` | 整理交付 | [规范](stage-7-delivery.md) | 交付成果入口和准确完成状态；不自动重建产物、发布或发送给他人。 |
 | `preferences` | 工作偏好 | [规范](preferences.md) | 交付可编辑文件和本次生效范围；临时 prompt 覆盖不写回，其他项目不继承。 |
 | `reflect` | 项目复盘 | [规范](workbench.md) | 按任务核查实际调用、结果与用户反馈，提出改进建议，不自动改默认。 |
-| `workbench` | 可视工作台 | [规范](workbench.md) | 打开深色工作台与调用星图；按授权同步 Codex 项目和近期聊天快照，不扫描无关目录。 |
+| `workbench` | 可视工作台 | [规范](workbench.md) | 打开实际工作图、产物与待办，以及调用星图；按授权同步 Codex 项目和近期聊天快照，不扫描无关目录。 |
 
 `build`、`improve`、`resume` 分别读取 workflows.md 中实现、优化、继续部分。`context`、`goals`、`plan`、`discover`、`verify`、`deliver` 不自行扩展到实现或修复。组合请求按用户给定顺序与依赖执行，不把每个入口当作重新开始的新项目。`preferences` 支持查看、修改和打开动态框架图。

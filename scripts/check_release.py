@@ -19,6 +19,7 @@ def run(argv, cwd):
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=60)
     if result.returncode:
         raise RuntimeError(result.stdout.decode("utf-8", errors="replace"))
+    return result.stdout.decode("utf-8")
 
 
 def main():
@@ -51,6 +52,13 @@ def main():
         run([suite / "conduct-best-skills/scripts/conduct.py", "--workspace", preference_project, "preferences", "show"], destination)
         run([installed / "scripts/conduct.py", "--workspace", preference_project, "harness", "set", "--task", "intro", "--expected", "missing", "--objective", "Draft introduction"], destination)
         run([installed / "scripts/conduct.py", "--workspace", preference_project, "harness", "show", "--task", "intro"], destination)
+        graph = json.loads(run([installed / "scripts/conduct.py", "--workspace", preference_project, "workflow", "show"], destination))
+        assert graph['nodes'][0]['task'] == 'intro'
+        run([installed / "scripts/conduct.py", "--workspace", preference_project, "workflow", "node",
+             "--id", graph['nodes'][0]['id'], "--expected", graph['revision'],
+             "--approach", "Check sources before drafting"], destination)
+        inbox = json.loads(run([suite / "conduct-best-skills/scripts/conduct.py", "--workspace", preference_project, "workflow", "inbox"], destination))
+        assert inbox['requests'] == []
         index = destination / "workbench-index"
         run([installed / "scripts/conduct.py", "--workspace", preference_project, "workbench", "onboard", "--home", index], destination)
         snapshot = destination / "snapshot.json"

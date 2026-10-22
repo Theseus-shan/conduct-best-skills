@@ -498,6 +498,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workspace", default=".", help="Project root; state is stored in .conduct/")
     sub = parser.add_subparsers(dest="command", required=True)
+    workflow_parser = sub.add_parser('workflow', help='Project work graph and pending user adjustments')
+    from workflow import add_arguments as workflow_arguments, execute as workflow_execute
+    workflow_arguments(workflow_parser)
     harness_parser = sub.add_parser('harness', help='Task objectives, route, acceptance and improvement context')
     from harness import add_arguments as harness_arguments, execute as harness_execute
     harness_arguments(harness_parser)
@@ -549,7 +552,9 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         ws = Workspace(args.workspace)
-        if args.command == "harness":
+        if args.command == "workflow":
+            result = workflow_execute(args)
+        elif args.command == "harness":
             result = harness_execute(args)
         elif args.command == "preferences":
             result = preference_execute(args)

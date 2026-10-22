@@ -18,6 +18,7 @@ CORE = ROOT / 'skills/conduct-best-skills'
 sys.path.insert(0, str(CORE / 'scripts'))
 import activity
 import harness
+import workflow
 import preferences
 
 
@@ -58,6 +59,16 @@ def seed(parent):
         activity.record(**common, event=outcome, evidence=['demo:synthetic-evidence'])
         if rating != 'unknown':
             activity.feedback(paper, call, rating, '合成示例反馈，不代表真实用户评价。')
+    (paper / 'draft.md').write_text('# 合成引言示例\n\n这里是用于界面验收的虚构内容，不代表科研结论。\n', encoding='utf-8')
+    (paper / 'results.csv').write_text('case,value\nsynthetic-a,1\nsynthetic-b,2\n', encoding='utf-8')
+    nodes = [
+        workflow.new_node('sources', '核对关键文献', '文献核对', objective='为关键主张建立可核查的来源。', approach='优先核对已有文献；检索失败时保留待核对项，不猜测引用。', acceptance='逐条确认原文是否支持相应主张。', next_step='补充两条关键主张的来源。', blocker='合成示例：文献服务调用失败，仍需补充来源。', capabilities=['literature-search'], state='blocked'),
+        workflow.new_node('gap', '明确研究缺口', '研究缺口', objective='把研究问题与现有工作的区别说清楚。', approach='依据已核实材料梳理论证，再与作者确认。', depends_on=['sources'], outputs=['research-gap.md']),
+        workflow.new_node('analysis', '仿真与统计复核', '统计复核', objective='核对合成结果并准备可复现的分析依据。', approach='先检查输入，再复核统计口径。', acceptance='数据、单位与报告一致。', outputs=['results.csv'], capabilities=['python'], state='active'),
+        workflow.new_node('figures', '制作结果图表', '图表制作', objective='将已核对的结果转为可读图表。', inputs=['results.csv'], outputs=['figure.svg'], depends_on=['analysis'], capabilities=['nature-figure']),
+        workflow.new_node('intro', '撰写引言初稿', '引言初稿', objective='交付论证清晰、引用可核查的引言。', approach='nature-writing 起草结构，Anti-Defensive Writing 检查防御性表达，保留事实和必要局限。', acceptance='每条关键主张有来源，研究缺口清楚。', next_step='先核实研究缺口，再调整初稿。', depends_on=['gap', 'figures'], outputs=['draft.md'], capabilities=['nature-writing', 'Anti-Defensive Writing'])]
+    preferences.atomic_write(paper / '.conduct/workflow.json', {'schema_version': 1, 'nodes': nodes, 'requests': [], 'history': []})
+    workflow.request_change(paper, 'intro', '合成演示：先核对研究缺口，暂时不要润色。', workflow.read(paper)['revision'], 'demo-request')
     projects[0]['invocations'] = 4
     return projects
 
@@ -98,6 +109,11 @@ def main():
                 if key not in {p['id'] for p in projects}:
                     return self.reply(404, {'error': 'Unknown demo project'})
                 folder = parent / key
+                if parts.path == f'/{token}/api/artifact':
+                    try:
+                        return self.reply(200, workflow.artifact(folder, query.get('node', [''])[0], query.get('path', [''])[0]))
+                    except (ValueError, OSError) as error:
+                        return self.reply(422, {'error': str(error)})
                 if parts.path == f'/{token}/api/reflection':
                     return self.reply(200, activity.markdown(activity.report(folder)).encode('utf-8'), 'text/markdown; charset=utf-8')
                 if parts.path != f'/{token}/api/preferences':

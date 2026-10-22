@@ -81,6 +81,8 @@ def record(root, task, kind, name, event, call_id, note="", evidence=None, ratin
         from harness import binding
         invocation = next((e for e in earlier if e['event'] == 'invoked'), None)
         payload['brief_revision'] = invocation.get('brief_revision', 'missing') if invocation else binding(root, task)
+        from workflow import binding as workflow_binding
+        payload['workflow_revision'] = invocation.get('workflow_revision', 'missing') if invocation else workflow_binding(root, task)
         payload["at"] = datetime.now(timezone.utc).isoformat()
         data["events"].append(payload)
         return payload
@@ -108,7 +110,7 @@ def report(root, task=None):
         reviews = [e for e in events if e["event"] == "feedback"]
         outcome = "verified" if "verified" in states else "failed" if "failed" in states else "succeeded" if "succeeded" in states else "unknown"
         invocation = next((e for e in events if e['event'] == 'invoked'), first)
-        calls.append({"call_id": key, "brief_revision": invocation.get('brief_revision', 'missing'), "work": first.get("work", "default"), "task": first["task"], "kind": first["kind"], "name": first["name"],
+        calls.append({"call_id": key, "brief_revision": invocation.get('brief_revision', 'missing'), "workflow_revision": invocation.get('workflow_revision', 'missing'), "work": first.get("work", "default"), "task": first["task"], "kind": first["kind"], "name": first["name"],
                       "invoked": "invoked" in states, "outcome": outcome, "states": list(dict.fromkeys(e["event"] for e in events)),
                       "rating": reviews[-1]["rating"] if reviews else "unknown", "feedback": reviews[-1]["note"] if reviews else "",
                       "evidence": list(dict.fromkeys(x for e in events for x in e.get("evidence", []))),
