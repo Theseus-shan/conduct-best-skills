@@ -170,10 +170,12 @@ class Workspace:
 
     def initialize(self, contract):
         validate(contract, self.root)
-        require(not self.folder.exists(), ".conduct already exists; initialization never overwrites it")
-        self.folder.mkdir()
-        atomic_json(self.contract_path, contract)
-        atomic_json(self.state_path, {"schema_version": 1, "attempts": [], "operations": {}, "events": []})
+        self.folder.mkdir(exist_ok=True)
+        with self.locked():
+            require(not self.contract_path.exists() and not self.state_path.exists(),
+                    "Execution state already exists; initialization never overwrites it")
+            atomic_json(self.contract_path, contract)
+            atomic_json(self.state_path, {"schema_version": 1, "attempts": [], "operations": {}, "events": []})
 
     def load(self):
         contract = validate(read_json(self.contract_path), self.root)
@@ -496,6 +498,15 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workspace", default=".", help="Project root; state is stored in .conduct/")
     sub = parser.add_subparsers(dest="command", required=True)
+    preference_parser = sub.add_parser("preferences", help="Workspace defaults, task overrides and live preference map")
+    from preferences import add_arguments as preference_arguments, execute as preference_execute
+    preference_arguments(preference_parser)
+    activity_parser = sub.add_parser("activity", help="Record actual capability use and reflect within this project")
+    from activity import add_arguments as activity_arguments, execute as activity_execute
+    activity_arguments(activity_parser)
+    workbench_parser = sub.add_parser("workbench", help="Register workspaces and open the persistent local workbench")
+    from workbench import add_arguments as workbench_arguments, execute as workbench_execute
+    workbench_arguments(workbench_parser)
     discovery_parser = sub.add_parser("discover", help="Discover Skill metadata without installing or executing candidates")
     from discovery import add_arguments as discovery_arguments, execute as discover_execute
     from discovery_core import DiscoveryError
@@ -535,7 +546,16 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         ws = Workspace(args.workspace)
-        if args.command == "discover":
+        if args.command == "preferences":
+            result = preference_execute(args)
+        elif args.command == "activity":
+            result = activity_execute(args)
+            if isinstance(result, str):
+                print(result)
+                return 0
+        elif args.command == "workbench":
+            result = workbench_execute(args)
+        elif args.command == "discover":
             try:
                 return discover_execute(args)
             except DiscoveryError as exc:

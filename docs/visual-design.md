@@ -91,3 +91,11 @@ Prompt specification: Original hand-drawn editorial illustration for conduct-bes
 The README replaces the former comparison and interaction SVG embeds with the two illustrations; the editable SVGs remain linked in the inventory for precise reference. This does not increase the number of inline figures. Both languages use text-free art with translated captions. The drawings are conceptual, not evidence that a task or evaluation passed.
 
 Generation: built-in imagegen, 2026-10-15, using only this project's original intent-to-evidence illustration as character/style reference. Exact prompts and reference role are recorded in `assets/illustrations/generation-prompts.json`; underlying provider model/version was not exposed. Both selected images were visually reviewed and copied without raster edits. No third-party reference artwork was supplied to these generation calls.
+
+## Workbench constellation / 深色工作台与调用星图
+
+The interactive workbench uses midnight navy (`#080d19`), slate panels, readable pale text and restrained cyan/violet signals. Sparse stars and soft background gradients suggest a galaxy. Thin glowing curves connect actual work, task, capability and result nodes; travelling light expresses direction without asserting live execution. Pause and reduced-motion support keep the information accessible. The earlier white-background SVGs remain explanatory documentation figures.
+
+The layout was informed by [Plane](https://github.com/makeplane/plane)'s project organization and [shadcn Dashboard](https://ui.shadcn.com/examples/dashboard)'s information hierarchy. Layout, CSS, SVG wires and motion are independently implemented without copied assets or code.
+
+Public screenshots [workflow](../assets/workbench/workflow.png) and [preferences](../assets/workbench/preferences.png) render the actual frontend with `scripts/preview_workbench.py`. All projects, chats, evidence references and feedback are synthetic. The preview does not import a real index. PNGs are captured from the browser, not AI-generated mockups; no personal screenshot is used. Run the preview to inspect motion, which a still image cannot show.

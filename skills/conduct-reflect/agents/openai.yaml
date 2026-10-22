@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conduct · 项目复盘"
+  short_description: "按工作空间组织项目、任务和实际能力使用，提供可核查的项目复盘与明确范围"
+  default_prompt: "请使用 $conduct-reflect 查看当前项目的工作方式与实际记录，交付可追溯的复盘和偏好建议；未经用户要求不改默认，不把频率当质量。"

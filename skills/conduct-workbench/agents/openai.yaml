@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conduct · 可视工作台"
+  short_description: "按工作空间组织项目、任务和实际能力使用，提供可核查的可视工作台与明确范围"
+  default_prompt: "请使用 $conduct-workbench 查看当前项目的工作方式与实际记录，打开实际 URL，提供项目总览、偏好地图与调用复盘；不扫描无关项目，不把记录覆盖说成完整。"

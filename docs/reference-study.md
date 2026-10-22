@@ -30,3 +30,7 @@
 - 不把新的指南自称为效果提升证据。程序检查、实际 Agent 试用与总体效果实验分别记录。
 
 实现入口：[Skill](../skills/conduct-best-skills/SKILL.md)、[三条任务路径](../skills/conduct-best-skills/references/workflows.md)、[工具用法](../skills/conduct-best-skills/references/runtime.md)。实际验证见[验证记录](validation.md)。
+
+## Command entries and workbench / 命令与工作台补充
+
+ARIS 的按能力分目录方式用于设计 13 个独立入口，与共享总控共 14 个 Skill；规划、验证等入口保留边界。前端信息层级参考 Plane 和 shadcn Dashboard，详见[视觉设计](visual-design.md)，没有复制其代码或图片。自然语言偏好、项目默认与任务覆盖、Codex 快照桥接及显式调用复盘由本项目自行实现；这些机制不证明全局最优组合或完整自动追踪。

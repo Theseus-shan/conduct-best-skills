@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conduct · 定向修正"
+  short_description: "在当前项目中依据已发现的验收缺陷定位根因，有限修正并重验受影响条件，保留明确任务边界"
+  default_prompt: "请使用 $conduct-refine 定向修正，遵循当前项目及任务偏好，并交付对应成果与依据。"

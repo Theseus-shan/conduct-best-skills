@@ -94,3 +94,17 @@ Expected: read the current artifact, rerun affected checks with file/test tools,
 ## Recording results / 记录实际结果
 
 Use a separate, authorized run record containing case ID, host/model/Skill version, fixture versions, request, actual trace, artifact references, observed confirmation, PASS/FAIL/INCONCLUSIVE and limitations. Keep the design catalog unchanged unless the project adopts a new catalog policy. A test command passing verifies the fixture result, not the coordinating Skill's entire behavior.
+
+## 5. A project from preferences to reflection / 从偏好到复盘
+
+This is a synthetic usage recipe, not a claim of a completed research project.
+
+1. “用 $conduct-workbench 打开工作台并同步我的 Codex 项目。”
+2. “用 $conduct-preferences 设置：写论文时默认使用 Anti-Defensive Writing 和 nature-writing，并保留事实与必要局限。”
+3. “用 $conduct-build 撰写这段引言，本次不要使用 Anti-Defensive Writing。”
+4. “仅在这个任务中调整写作偏好，其他任务继续沿用项目默认。”
+5. “用 $conduct-reflect 回看本项目各任务实际用了哪些能力，哪些有证据、哪些需要改进。”
+
+Expected: the host checks Skill availability and interprets the task; the current prompt exclusion does not overwrite saved defaults. The preference map updates after files are saved. The call constellation and table include only explicit records, preserving failures and unknown feedback. Codex projects/chats carry a snapshot timestamp; missing history is not filled in. Other projects do not inherit settings.
+
+For a public visual preview without real workspace data, run `python scripts/preview_workbench.py`. The preview rejects edits; use a separate disposable project with the actual workbench server to test saves.

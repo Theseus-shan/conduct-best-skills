@@ -1,5 +1,13 @@
 # Repository audit / 仓库审查
 
+## 当前增量：工作台与命令 / 2026-10-22
+
+当前包包含总控和 13 个独立入口、项目偏好与任务覆盖、自然语言编辑、动态偏好地图、显式调用记录、反馈与复盘，以及本机 Codex 项目/近期聊天的快照同步。深色调用星图根据记录连接工作、任务、能力与结果；动画只表达方向。公开展示使用合成数据。
+
+依据：[命令与偏好](commands-and-preferences.md)、[架构](architecture.md)、[工作台实现](../skills/conduct-best-skills/scripts/workbench.py)、[调用记录](../skills/conduct-best-skills/scripts/activity.py)、[验证](validation.md)。下文“没有存储引擎”等表述是历史审查快照；当前已有项目本地存储，仍无完整宿主事件拦截或自动学习。
+
+## 历史审查快照
+
 2026-10-22 多源发现轮次：在既有能力路由之前增加六类元数据来源、统一解析、去重、预算、缓存、静态初筛及组合建议。实际实现和接口限制见[设计分析](discovery-design.md)，验证见[Discovery 记录](discovery-validation.md)。下列历史快照中“不提供来源适配器”的描述不再代表当前包；仍不自动安装、执行或批准外部 Skill。
 
 2026-10-22 后续轮次：新增实现/优化/继续路径、快速启动与批量检查、简短续接说明。31 项程序回归和三个独立上下文小任务试用的范围见 [可用性记录](usability-evaluation.md)；借鉴来源及未采用的假设见 [参考比较](reference-study.md)。

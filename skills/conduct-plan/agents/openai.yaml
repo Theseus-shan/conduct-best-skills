@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conduct · 规划编排"
+  short_description: "在当前项目中为多步骤任务规划依赖、能力组合和验收，保留明确任务边界"
+  default_prompt: "请使用 $conduct-plan 规划编排，遵循当前项目及任务偏好，并交付对应成果与依据。"

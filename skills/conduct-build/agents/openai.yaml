@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conduct · 实现需求"
+  short_description: "在当前项目中将明确需求做成可运行或可打开的成果，保留明确任务边界"
+  default_prompt: "请使用 $conduct-build 实现需求，遵循当前项目及任务偏好，并交付对应成果与依据。"

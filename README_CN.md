@@ -14,7 +14,7 @@
 
 [English](README.md) · 简体中文
 
-[项目主旨](#项目主旨) · [快速开始](#快速开始) · [工作流程](#工作机制) · [使用实例](#使用实例) · [技术架构](docs/architecture.md)
+[项目主旨](#项目主旨) · [快速开始](#快速开始) · [可视工作台](#可视工作台) · [工作流程](#工作机制) · [使用实例](#使用实例) · [技术架构](docs/architecture.md)
 
 </div>
 
@@ -30,7 +30,7 @@
 
 普通问答和一句话修改直接处理。复杂任务由 Agent 按需选择专业 Skill；启用本地证据工具时，也由 Agent 负责配置。
 
-**已做过的检查：**31 项程序回归，以及三个全新上下文的小任务试用，覆盖简短解释、修改后恢复和从零实现。两项代码产物另用额外输入复验。[实际结果与适用范围](docs/usability-evaluation.md)。
+**当前检查：**154 项程序回归（152 项通过、2 项因环境条件跳过）、工作台浏览器检查与发布包解压运行检查。此前三个全新上下文小任务试用单独保留，不等于完整行为验收。[验证记录与适用范围](docs/validation.md)。
 
 你是否也遇到过这些情况？
 
@@ -55,7 +55,7 @@
 
 当前版本通过实现、优化和继续三条任务路径组织工作，七阶段参考按需提供判断依据。跨平台上下文仍需宿主连接和授权，跨任务经验积累需要获准存储和真实记录；小样本试用不能理解为全自动连接、学习或结果保证。
 
-**Skill** 是 Agent 按需读取的一组指令文件。本仓库提供**一个总控 Skill**及七个阶段参考文件。模型、工具和可选子代理由宿主提供；专业方法由另行安装的专业 Skills 提供。
+**Skill** 是 Agent 按需读取的一组指令文件。本仓库提供**一个总控 Skill 和 13 个独立能力入口**，共享七阶段参考与本地工具。模型、工具和可选子代理由宿主提供；专业方法由另行安装的专业 Skills 提供。
 
 > **现在包含可运行的本地闭环工具。** 随 Skill 提供任务依赖校验、能力筛选、实际检查执行、文件版本与证据绑定、未知操作核对及恢复报告。工具回归与演示见[验证记录](docs/validation.md)。204 项 Agent 设计场景仍为 `NOT_RUN`；旧版三组 A/B 双方核心任务均通过，尚无模型效果提升证据。
 
@@ -106,6 +106,56 @@ fi
 | 支持本地 Skill 发现的 Codex | 目标宿主；提供 `SKILL.md` 与 `agents/openai.yaml`。Windows 复制布局已检查；新宿主发现与行为未认证。 |
 | 其他支持 Skills 的 Agent | Markdown 理论上可适配；安装、调用和运行行为未验证。 |
 | Windows / Linux 打包 CI | 已配置双平台工作流；本地执行了 Windows 检查，不声称远程 CI 已通过。 |
+
+## 独立命令与工作空间偏好
+
+保留 `$conduct-best-skills` 自动总控，也可以直接指定本次工作：
+
+| 命令 | 负责的工作 |
+| --- | --- |
+| `$conduct-context` / `$conduct-goals` | 核查上下文 / 澄清目标 |
+| `$conduct-plan` / `$conduct-discover` | 规划工作 / 发现能力 |
+| `$conduct-build` / `$conduct-improve` | 实现需求 / 有依据地优化 |
+| `$conduct-resume` | 从当前可信进度继续 |
+| `$conduct-verify` / `$conduct-refine` | 只验证 / 定向修正并重验 |
+| `$conduct-deliver` | 整理现有成果与移交 |
+| `$conduct-preferences` | 编辑项目默认与任务覆盖，打开动态偏好框架图 |
+| `$conduct-workbench` | 打开工作台，同步 Codex 项目与近期聊天 |
+| `$conduct-reflect` | 按任务复盘能力使用、证据与用户反馈 |
+
+使用全部独立入口请安装 **`dist/conduct-best-skills-suite.zip`**，保留 14 个同级技能目录。上面的单核心安装也支持 `$conduct-best-skills plan ...` 等形式，首个参数对应命令名称。每个入口有自己的停止边界，只规划、只验证不会自动变成实现。
+
+每个工作空间有可编辑的 `.conduct/preferences.json`，可用 `.conduct/tasks/<task-id>/preferences.json` 覆盖特定任务。优先级为当前 prompt > 任务覆盖 > 项目默认；其他工作空间不继承。例如设置“论文写作默认调用 **Anti-Defensive Writing**”后，Agent 会检查真实可用性、加载并应用；本次明确说不用则临时排除，不改保存的默认。本包不包含该示例专业 Skill。
+
+`$conduct-preferences` 可以打开项目默认 → 任务覆盖 → 当前 prompt → 当前规则的动态图，约每两秒重读文件，并提供带校验和版本冲突检查的自然语言编辑器。图展示配置，不冒充实际调用证据；任务当前情况由 Agent 同步并显示时间，本机服务停止后会提示更新中断。[完整命令、安装与偏好说明](docs/commands-and-preferences.md)。
+
+## 可视工作台
+
+从项目开始设定工作偏好，再在同一个本地工作台中回看任务、能力调用和结果。深色界面采用星空底色、发光丝线和流动光点，连接 **工作 → 任务 → Skill / MCP / 工具 → 已记录结果**。动画可以暂停；系统开启减少动态效果时保持静止。
+
+![深色星图工作台：工作、任务、能力与结果通过发光线路连接；全部为合成演示。](assets/workbench/workflow.png)
+
+*真实前端使用虚构项目、聊天、调用和反馈渲染。光点表达保存记录中的关联方向，不代表实时执行、真实项目成果或性能测量。*
+
+| 视图 | 可以做什么 |
+| --- | --- |
+| 工作总览 | 切换工作空间，查看近期 Codex 聊天快照、已记录工作与任务 |
+| 偏好地图 | 用自然语言编辑规则，查看项目默认、任务覆盖和当前 prompt 临时排除 |
+| 调用与复盘 | 筛选 Skills、MCP 与工具，查看结果和证据引用，添加使用反馈并导出复盘 |
+
+![自然语言偏好编辑器与当前生效规则；使用合成数据。](assets/workbench/preferences.png)
+
+可以直接说：**“用 $conduct-workbench 打开工作台并同步我的 Codex 项目。”** 然后说：**“这个项目写论文时，默认使用 Anti-Defensive Writing 和 nature-writing，并保留事实、引用与必要局限。”** 用户无需填写配置代码。编辑器可保存常见偏好句式，复杂表达由 Codex 理解后保存；指定能力必须实际可用。
+
+项目和近期聊天通过宿主官方工具同步为带时间的快照，需要更新时再说“同步工作台项目”。页面自动读取已保存文件，尚未实时订阅 Codex 变更，也不会捕获所有工具调用。导入索引不会修改其他项目的偏好。需要后续聊天接续工作方式时，可由 Agent 对明确指定的项目执行 `workbench onboard`。
+
+公开展示页只使用临时生成的虚构数据，且拒绝写入：
+
+```sh
+python scripts/preview_workbench.py
+```
+
+打开返回的本地网址，切换“调用与复盘”或“偏好地图”即可查看。这个展示入口不会导入你的 Codex 索引或读取已有项目历史。[完整用法与数据边界](docs/commands-and-preferences.md)。
 
 ## 先运行一次，看见实际作用
 
@@ -175,7 +225,7 @@ python skills/conduct-best-skills/scripts/conduct.py --workspace . discover --ro
 | 能力选择 | 可见元数据 → 可访问目录 → 有实质缺口时扩展外部发现，不自动安装 |
 | 有条件的协同编排 | 默认单 Agent；收益明确、环境支持且获准时委派，明确依赖与写入边界 |
 | 证据与恢复 | 区分执行与验证；有限恢复、版本感知检查和定向修正 |
-| 可选偏好 | 获准偏好只对合格候选排序；持久化与观测依赖真实宿主接口 |
+| 工作空间偏好与复盘 | 项目默认、任务覆盖、prompt 排除与显式调用履历；规则由宿主 Agent 实际应用 |
 
 上述能力具有流程规则；其中能力筛选、依赖校验、版本证据及恢复另有可执行本地工具。完整 Agent 行为验收尚未完成，程序回归不证明模型一定遵守规则，也不证明相对基线的总体增益。[功能与来源对应审查](docs/audit.md)。
 
@@ -232,7 +282,7 @@ flowchart TD
 
 | 仓库区域 | 用途 |
 | --- | --- |
-| [skills/conduct-best-skills/](skills/conduct-best-skills/) | 一个入口、七阶段参考、本地 CLI 与演示、契约、学习规则和 UI 元数据 |
+| [skills/](skills/) | 共享总控核心、13 个能力入口、七阶段参考、本地 CLI、偏好图和 UI 元数据 |
 | [evals/](evals/) | 204 项设计场景与人工行为评估协议 |
 | [docs/](docs/) | 架构、验收配方、证据审查、视觉设计和验证记录 |
 | [assets/](assets/) | 原创可编辑 SVG 与 Mermaid 流程源码 |
@@ -256,13 +306,13 @@ python scripts/build_release.py
 python scripts/check_release.py
 ```
 
-构建生成 `dist/conduct-best-skills-source.zip`（含文档与视觉的公开源码）与 `dist/conduct-best-skills-skill.zip`（独立 Skill 和许可证）。明确白名单排除私有设计材料与本地状态。将 **Skill 包**解压到宿主技能目录，保留 `conduct-best-skills/` 文件夹；source 包用于整个仓库。
+构建生成 `dist/conduct-best-skills-source.zip`（公开源码）、`dist/conduct-best-skills-skill.zip`（独立核心）和 `dist/conduct-best-skills-suite.zip`（核心与 13 个能力入口）。明确白名单排除私有设计材料与本地状态。将 **suite 包**解压到宿主技能目录，保留 14 个同级文件夹；已有同名安装先备份并检查差异。source 包用于整个仓库。
 
 请阅读[贡献指南](CONTRIBUTING.md)、[安全说明](SECURITY.md)、[验收协议](evals/README.md)和[变更记录](CHANGELOG.md)。仓库包含 Issue/PR 模板。行为评估仍为 NOT_RUN；静态验证通过不代表实际行为效果已经验证。
 
 ## 反馈与建议
 
-欢迎通过 [Issues → New issue](https://github.com/shan2223/conduct-best-skills/issues/new/choose) 提交使用反馈、Bug 和优化建议。提交前请先搜索已有 Issue；相同问题可以在原讨论中补充证据。
+欢迎通过 [Issues → New issue](https://github.com/Theseus-shan/conduct-best-skills/issues/new/choose) 提交使用反馈、Bug 和优化建议。提交前请先搜索已有 Issue；相同问题可以在原讨论中补充证据。
 
 - **Bug 反馈**：选择 Bug report 模板，说明任务场景、预期结果、实际表现、复现步骤、Skill 版本与运行环境，并尽量提供脱敏后的最小示例。
 - **优化建议**：选择 Feature request 模板，说明希望解决的问题、期望达到的结果，以及如何判断改进有效。

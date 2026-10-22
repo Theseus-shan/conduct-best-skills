@@ -9,16 +9,22 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL_PREFIX = "skills/conduct-best-skills/"
 SKILL_FILES = [
     "SKILL.md", "agents/openai.yaml",
+    "references/commands.md", "references/command-scope.md", "references/preferences.md",
+    "scripts/preferences.py", "scripts/activity.py", "scripts/workbench.py", "assets/preferences.html", "references/workbench.md",
     "references/stage-1-context.md", "references/stage-2-goals.md",
     "references/stage-3-planning.md", "references/stage-4-execution.md",
     "references/stage-5-verification.md", "references/stage-6-refinement.md",
     "references/stage-7-delivery.md", "references/contracts.md",
     "references/learning.md", "references/runtime.md", "scripts/conduct.py", "scripts/demo.py",
-    "references/workflows.md", "templates/task-brief.md",
+    "references/workflows.md", "templates/task-brief.md", "templates/workspace-agents.md",
     "references/discovery.md", "scripts/discovery.py", "scripts/discovery_core.py",
     "scripts/discovery_io.py", "scripts/discovery_sources.py",
 ]
+COMMAND_NAMES = ("context", "goals", "plan", "discover", "build", "improve", "resume", "verify", "refine", "deliver", "preferences", "reflect", "workbench")
+COMMAND_FILES = [f"skills/conduct-{name}/{file}" for name in COMMAND_NAMES
+                 for file in ("SKILL.md", "agents/openai.yaml")]
 PUBLIC_FILES = [
+    "assets/workbench/workflow.png", "assets/workbench/preferences.png", "scripts/preview_workbench.py",
     "assets/illustrations/shared-route.png", "assets/illustrations/interaction-scenes.png",
     "assets/illustrations/generation-prompts.json",
     "assets/illustrations/intent-to-evidence.png",
@@ -28,6 +34,7 @@ PUBLIC_FILES = [
     "assets/diagrams/before-after-cn.svg", "assets/diagrams/agent-interaction-cn.svg",
     "assets/diagrams/orchestration-cn.svg",
     "README_CN.md", "docs/architecture.md", "docs/audit.md", "docs/examples.md",
+    "docs/commands-and-preferences.md", "tests/test_preferences.py", "tests/test_workbench.py",
     "docs/visual-design.md", "docs/validation.md", "docs/implementation-plan.md", "tests/test_runtime.py",
     "docs/reference-study.md", "docs/usability-evaluation.md", "tests/test_workflow.py",
     "docs/discovery-design.md", "docs/discovery-adapters.md", "docs/discovery-validation.md",
@@ -44,7 +51,13 @@ PUBLIC_FILES = [
     ".github/ISSUE_TEMPLATE/bug_report.md",
     ".github/ISSUE_TEMPLATE/feature_request.md",
     ".github/PULL_REQUEST_TEMPLATE.md", ".github/workflows/ci.yml",
-] + [SKILL_PREFIX + name for name in SKILL_FILES]
+] + [SKILL_PREFIX + name for name in SKILL_FILES] + COMMAND_FILES
+
+
+def suite_entries():
+    return ([(SKILL_PREFIX + name, "conduct-best-skills/" + name) for name in SKILL_FILES]
+            + [(name, name.removeprefix("skills/")) for name in COMMAND_FILES]
+            + [("LICENSE", name + "/LICENSE") for name in ["conduct-best-skills", *["conduct-" + n for n in COMMAND_NAMES]]])
 
 
 def write_archive(output, entries):
@@ -71,6 +84,7 @@ def main():
         raise ValueError("Refusing redirected distribution directory")
     destination.mkdir(exist_ok=True)
     packages = {
+        "conduct-best-skills-suite.zip": suite_entries(),
         "conduct-best-skills-source.zip": [
             (name, "conduct-best-skills/" + name) for name in PUBLIC_FILES
         ],

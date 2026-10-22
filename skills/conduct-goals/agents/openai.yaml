@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conduct · 目标澄清"
+  short_description: "在当前项目中把含糊需求收敛为范围、交付物与验收标准，保留明确任务边界"
+  default_prompt: "请使用 $conduct-goals 目标澄清，遵循当前项目及任务偏好，并交付对应成果与依据。"

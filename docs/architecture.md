@@ -73,6 +73,22 @@ Necessary checks must be supported before verified delivery. Otherwise report pa
 ![获准的上下文与经验复用](../assets/diagrams/context-memory-cn.svg)
 
 
-[Learning rules](../skills/conduct-best-skills/references/learning.md) specify optional observations and preference use. No collector ships here. Saving requires permission and actual storage support; absent observations stay unknown. Cross-project transfer is limited to authorized, relevant aggregate experience and cannot transfer private source content or permissions. Current instructions and hard eligibility always take priority.
+[Learning rules](../skills/conduct-best-skills/references/learning.md) specify optional observations and preference use. The package now ships project-local preference storage and an explicit activity recorder. It does not intercept all host events. Absent observations stay unknown; project preferences never propagate to other projects. Current instructions and hard eligibility always take priority. Any future cross-project learning needs separate authorization and evidence.
 
 没有持久化接口时，核心任务仍可执行。行为校准、完整事件覆盖与自动清理都不能仅凭规则文件宣称已经实现。
+
+## Workbench data flow / 工作台数据流
+
+The suite contains one coordinating core and 13 focused entry Skills. Their boundaries share [command scope](../skills/conduct-best-skills/references/command-scope.md); they are not background agents.
+
+| Layer | Responsibility | Data boundary |
+| --- | --- | --- |
+| `preferences.py` | Project rules, task overrides, prompt exclusions, natural-language card parsing and version-safe saves | Current workspace only; complex semantics remain the host agent's responsibility |
+| `activity.py` | Selected / loaded / invoked / outcome / evidence / feedback | Explicit partial events; selected does not mean invoked; success does not mean user satisfaction |
+| `workbench.py` | Persistent project index, onboarding and Codex snapshot import | Imported projects are not initialized or tracked automatically |
+| `preferences.html` | Dark dashboard, preference map and luminous call-flow diagram | Rereads files; moving light represents associations, not live host telemetry |
+| Host tools | `list_projects` and `list_threads` | Local-host project paths and minimal recent-chat metadata; no full transcript import |
+
+Rule precedence is current prompt → task override → project default. The dashboard never writes global preferences. The loopback server uses a random URL token, validates Host and write headers, and is not a public hosting service. `workbench onboard` preserves existing AGENTS.md guidance with a backup; it only applies to the explicitly selected project.
+
+The flow graph derives work/task/capability/result edges from saved calls. It shows up to eight recent calls per view, preserves failure and unknown states, follows activity filters, supports pause and reduced motion, and retains the table for complete review. [Usage](commands-and-preferences.md) · [Security](../SECURITY.md).

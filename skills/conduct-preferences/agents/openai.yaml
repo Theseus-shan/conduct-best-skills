@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conduct · 工作偏好"
+  short_description: "在当前项目中创建、查看或修改当前项目默认工作偏好与任务覆盖，保留明确任务边界"
+  default_prompt: "请使用 $conduct-preferences 工作偏好，遵循当前项目及任务偏好，并交付对应成果与依据。"

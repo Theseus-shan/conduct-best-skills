@@ -18,7 +18,19 @@ def main():
     if len(list((SKILL / "references").glob("stage-*.md"))) != 7:
         errors.append("Expected seven stage references")
     documents = [*ROOT.glob("*.md"), *(ROOT / "evals").glob("*.md"),
-                 *SKILL.rglob("*.md"), *(ROOT / ".github").rglob("*.md")]
+                 *(ROOT / "skills").rglob("*.md"), *(ROOT / ".github").rglob("*.md")]
+    names = set()
+    for folder in sorted((ROOT / "skills").iterdir()):
+        if not folder.is_dir():
+            continue
+        body = (folder / "SKILL.md").read_text(encoding="utf-8")
+        match = re.match(r"---\nname: ([a-z0-9-]+)\ndescription: (.+)\n---", body)
+        if not match or match[1] != folder.name or match[1] in names:
+            errors.append(f"Invalid or duplicate skill name: {folder.name}")
+        names.add(folder.name)
+        metadata = (folder / "agents/openai.yaml").read_text(encoding="utf-8")
+        if "$" + folder.name not in metadata:
+            errors.append(f"Default prompt does not name its skill: {folder.name}")
     for path in documents:
         text = path.read_text(encoding="utf-8")
         for target in re.findall(r"\]\(([^)]+)\)", text):

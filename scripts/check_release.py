@@ -8,7 +8,7 @@ import sys
 import tempfile
 from zipfile import ZipFile
 
-from build_release import PUBLIC_FILES, SKILL_FILES, SKILL_PREFIX
+from build_release import PUBLIC_FILES, SKILL_FILES, SKILL_PREFIX, suite_entries, COMMAND_NAMES
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -28,6 +28,7 @@ def main():
         destination = Path(name).resolve()
         assert destination.is_relative_to(scratch.resolve())
         for kind, expected in (
+            ("suite", {member: source for source, member in suite_entries()}),
             ("skill", {"conduct-best-skills/" + f: SKILL_PREFIX + f for f in SKILL_FILES} | {"conduct-best-skills/LICENSE": "LICENSE"}),
             ("source", {"conduct-best-skills/" + f: f for f in PUBLIC_FILES}),
         ):
@@ -39,6 +40,25 @@ def main():
                     assert target.is_relative_to(destination), "Unsafe archive member"
                 archive.extractall(destination / kind)
         installed = destination / "skill" / "conduct-best-skills"
+        suite = destination / "suite"
+        for skill in ("conduct-best-skills", *["conduct-" + n for n in COMMAND_NAMES]):
+            assert (suite / skill / "SKILL.md").is_file()
+            assert (suite / skill / "agents/openai.yaml").is_file()
+        preference_project = destination / "preferences-project"
+        preference_project.mkdir()
+        run([installed / "scripts/conduct.py", "--workspace", preference_project, "preferences", "init"], destination)
+        run([installed / "scripts/conduct.py", "--workspace", preference_project, "preferences", "context", "--type", "coding"], destination)
+        run([suite / "conduct-best-skills/scripts/conduct.py", "--workspace", preference_project, "preferences", "show"], destination)
+        index = destination / "workbench-index"
+        run([installed / "scripts/conduct.py", "--workspace", preference_project, "workbench", "onboard", "--home", index], destination)
+        snapshot = destination / "snapshot.json"
+        snapshot.write_text(json.dumps({"schema_version": 1, "projects": [
+            {"projectId": "archive-test", "label": "Archive project", "path": str(preference_project)}], "threads": []}), encoding="utf-8")
+        run([installed / "scripts/conduct.py", "--workspace", preference_project, "workbench", "sync", "--home", index, "--snapshot", snapshot], destination)
+        run([installed / "scripts/conduct.py", "--workspace", preference_project, "activity", "report", "--format", "markdown"], destination)
+        assert (preference_project / "AGENTS.md").is_file()
+        assert json.loads((index / "projects.json").read_text(encoding="utf-8"))["codex_sync"]["project_count"] == 1
+        assert (installed / "assets/preferences.html").is_file()
         run([installed / "scripts/demo.py", "--output", destination / "standalone-demo"], destination)
         run([installed / "scripts/conduct.py", "--workspace", destination / "standalone-demo", "status"], destination)
         # Exercise the newcomer path using only the installed Skill and a user project.
@@ -65,7 +85,7 @@ def main():
         run([source / "scripts/check_docs.py"], source)
         for path in source.rglob("*.py"):
             ast.parse(path.read_text(encoding="utf-8"), feature_version=(3, 10))
-    print("PASS: archive allowlists and byte parity; installed demo, start/verify-ready/next and discovery; extracted source checks; Python 3.10 syntax")
+    print("PASS: three archive allowlists and byte parity; suite entrypoints and preferences; installed demo, start/verify-ready/next and discovery; extracted source checks; Python 3.10 syntax")
 
 
 if __name__ == "__main__":
