@@ -2,7 +2,7 @@
 
 ## Executable local companion / 可执行本地辅助工具
 
-[Runtime guide](../skills/conduct-best-skills/references/runtime.md) describes the optional Python CLI shipped inside the Skill. The host defines acceptance, performs implementation and supplies observed capability facts. The companion validates the dependency graph, filters those candidates, executes reviewed checks, and stores project-local JSON state and evidence logs. `status` recomputes file and evidence hashes, detects stale dependencies, and supplies recovery actions. It does not schedule agents or provide permissions, remote adapters or automatic learning. The instruction architecture below remains host-driven; earlier descriptions of absent runtime support refer to the seven-stage orchestration layer, not this new local companion.
+[Runtime guide](../skills/conduct-best-skills/references/runtime.md) describes the optional Python CLI shipped inside the Skill. The host defines acceptance, performs implementation and supplies observed capability facts. The companion validates the dependency graph, filters those candidates, executes reviewed checks, and stores project-local JSON state and evidence logs. `status` recomputes file and evidence hashes, detects stale dependencies, and supplies recovery actions. It does not schedule agents, grant permissions or provide automatic learning. Public metadata source adapters are described below. The instruction architecture below remains host-driven; earlier descriptions of absent runtime support refer to the seven-stage orchestration layer, not this new local companion.
 
 [English README](../README.md) · [中文 README](../README_CN.md)
 
@@ -14,7 +14,7 @@ The architecture serves the outcome the user wants: understand intent, bring in 
 
 ## What actually runs / 实际运行边界
 
-The host agent reads [SKILL.md](../skills/conduct-best-skills/SKILL.md), then the relevant stage references. The package supplies no executable scheduler, registry, tool adapter, permission middleware, process manager or memory database. `agents/openai.yaml` is display metadata and a default prompt, not a subagent declaration.
+The host agent reads [SKILL.md](../skills/conduct-best-skills/SKILL.md), then the relevant stage references. The package now includes six metadata source adapters and a bounded discovery engine, alongside the local evidence companion. It supplies no background scheduler, execution-tool adapter, permission middleware or process manager. `agents/openai.yaml` is display metadata and a default prompt, not a subagent declaration.
 
 宿主读取总控指令，再按需加载阶段文件。总控 Skill 与子 Skill 都是指令；工具和子代理属于宿主能力。七阶段是逻辑质量门，不是七个常驻进程，也不是七个独立可安装技能。
 
@@ -45,6 +45,8 @@ Editable branch-level source: [workflow.mmd](../assets/diagrams/workflow.mmd). T
 策略、上下文深度与规划深度不能混为一谈。Quality First 不代表无限资源；简单任务也不需要生成一套完整报告。
 
 ## Selection and delegation / 能力选择与委派
+
+[Discovery design](discovery-design.md) extends stages 1–3 with source policy, capability requirements and progressive retrieval. The [usage guide](../skills/conduct-best-skills/references/discovery.md) covers Local, OpenAI Plugins, Anthropic Skills, Skills.sh, SkillsMP and GitHub adapters. Static inspection, version identity, conservative deduplication, metadata matching and greedy composition produce a plan; all runtime availability still requires host preflight. Stages 4–7 consume that plan, validate actual use, replan within remaining budgets and deliver source/version evidence. Discovery never recursively launches the coordinator or installs a candidate.
 
 Discovery proceeds from visible metadata to accessible catalogs, then relevant trusted external sources only when a meaningful gap warrants expansion. Matching first checks domain fit, availability, permissions, dependencies, versions and necessary acceptance criteria. Cost and approved preferences rank only eligible candidates. A no-Skill baseline is considered for workflows that do not require a specialist.
 

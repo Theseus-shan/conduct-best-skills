@@ -1,5 +1,9 @@
 # 行为验收方法
 
+多源发现的六项新增设计场景单独放在 [discovery.json](discovery.json)，不改变原 204 项基线。相关程序回归、模拟接口、真实联网和独立试用分别记在 [Discovery 验证记录](../docs/discovery-validation.md)，目录自身保留 NOT_RUN，不用一次试用或单元测试代替整项行为验收。
+
+新增三项全新上下文的小任务观察见 [可用性试用记录](../docs/usability-evaluation.md)。原始任务与产物检查单独报告，不将其换算成下述 204 项目录的通过率，也不将显式调用当成自动触发评估。
+
 本地辅助程序的回归独立运行：`python scripts/validate_runtime.py --output local/runtime-results.json`；一键演示见[工具指南](../skills/conduct-best-skills/references/runtime.md)。这类程序检查不修改以下 204 项 Agent 场景状态，也不计入模型行为通过率。
 
 `cases.json` 保存设计中的 204 项验收场景：阶段 1 为 24 项，阶段 2 为 42 项，阶段 3 为 84 项，阶段 4–7 含端到端场景共 54 项。ID 增加阶段前缀以避免重号，项目特定对象已泛化；全部初始状态为 NOT_RUN。

@@ -2,6 +2,8 @@
 
 输入为有效契约、已检查蓝图和操作授权。核对环境变化、未结束或结果未知的操作、资源与恢复条件，再执行就绪节点。
 
+[发现报告](discovery.md)只提供候选及元数据版本。选定后按原授权核查完整资源、宿主可用性和必要连接，再加载 Skill；新安装、运行外部脚本或添加 MCP 均是独立操作。Plugin 的 Skill 可能依赖整个 Plugin，不能仅复制 SKILL.md 就标成可运行。
+
 ## 执行和记录
 
 节点状态：PENDING / READY / RUNNING / WAITING / RETRY_PENDING / EXECUTED_UNVERIFIED / FAILED / BLOCKED / CANCELLED。依赖未满足不启动下游；失败只传播到真实依赖；独立工作可以继续。共享可写资源具有明确所有者。

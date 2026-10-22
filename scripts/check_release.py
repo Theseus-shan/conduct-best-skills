@@ -1,5 +1,6 @@
 """Verify allowlisted bytes and execute both archives outside the source checkout."""
 import ast
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -40,12 +41,31 @@ def main():
         installed = destination / "skill" / "conduct-best-skills"
         run([installed / "scripts/demo.py", "--output", destination / "standalone-demo"], destination)
         run([installed / "scripts/conduct.py", "--workspace", destination / "standalone-demo", "status"], destination)
+        # Exercise the newcomer path using only the installed Skill and a user project.
+        starter = destination / "starter-project"
+        starter.mkdir()
+        for filename in ("total.py", "check.py"):
+            (starter / filename).write_bytes((destination / "standalone-demo" / filename).read_bytes())
+        run([installed / "scripts/conduct.py", "--workspace", starter, "start", "--goal", "Check scalar total",
+             "--requirement", "Totals are correct", "--artifact", "total.py", "--input", "check.py",
+             "--", "{python}", "-B", "check.py"], destination)
+        run([installed / "scripts/conduct.py", "--workspace", starter, "verify-ready", "--execute"], destination)
+        run([installed / "scripts/conduct.py", "--workspace", starter, "next"], destination)
+        probe = starter / "skills" / "csv-reader"
+        probe.mkdir(parents=True)
+        (probe / "SKILL.md").write_text("---\nname: csv-reader\ndescription: Read CSV tables\n---\nCheck headers.\n", encoding="utf-8")
+        run([installed / "scripts/conduct.py", "--workspace", starter, "discover", "--root", "skills",
+             "--keyword", "csv", "--need", "csv", "--no-cache", "--output", "discovery.json"], destination)
+        discovery = json.loads((starter / "discovery.json").read_text(encoding="utf-8"))
+        assert discovery["composition"]["missing"] == [] and discovery["requests_used"] == 0
+        assert discovery["candidates"][0]["name"] == "csv-reader"
+        assert discovery["catalog"]["capabilities"][0]["available"] is False
         source = destination / "source" / "conduct-best-skills"
         run([source / "scripts/check_package.py"], source)
         run([source / "scripts/check_docs.py"], source)
         for path in source.rglob("*.py"):
             ast.parse(path.read_text(encoding="utf-8"), feature_version=(3, 10))
-    print("PASS: archive allowlists and byte parity; installed Skill demo/status; extracted source checks; Python 3.10 syntax")
+    print("PASS: archive allowlists and byte parity; installed demo, start/verify-ready/next and discovery; extracted source checks; Python 3.10 syntax")
 
 
 if __name__ == "__main__":

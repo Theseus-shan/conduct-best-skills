@@ -39,8 +39,12 @@ def main():
     args = parser.parse_args()
     suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"))
     result = unittest.TextTestRunner(verbosity=2, resultclass=RecordedResult).run(suite)
-    paths = ["skills/conduct-best-skills/scripts/conduct.py", "skills/conduct-best-skills/scripts/demo.py",
-             "tests/test_runtime.py", "scripts/validate_runtime.py"]
+    paths = sorted({"scripts/validate_runtime.py"} | {
+        p.relative_to(ROOT).as_posix()
+        for folder in (ROOT / "tests", ROOT / "skills/conduct-best-skills")
+        for p in folder.rglob("*")
+        if p.is_file() and "__pycache__" not in p.parts and p.suffix in {".py", ".md", ".yaml"}
+    })
     report = {"schema_version": 1, "run_at_utc": datetime.now(timezone.utc).isoformat(),
               "scope": "Deterministic local companion regressions; not the 204 Agent behavior cases or A/B evaluation",
               "environment": {"python": platform.python_version(), "system": platform.system()},

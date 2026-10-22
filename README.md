@@ -20,6 +20,18 @@ English · [简体中文](README_CN.md)
 
 ## Our purpose
 
+After installation, start in ordinary language. You do not need to select a workflow, fill in a contract or memorize commands:
+
+| Your task | Try this | Expected delivery |
+| --- | --- | --- |
+| Build something | `Use $conduct-best-skills to turn this requirement into a working tool. Run the smallest complete path first, then add the necessary features.` | A runnable artifact, usage instructions and actual checks |
+| Improve a project | `Use $conduct-best-skills to find the most consequential usability problem, fix it and show before-and-after evidence.` | A targeted change, improvement evidence and remaining gaps |
+| Continue previous work | `Use $conduct-best-skills to continue from current trustworthy progress and preserve my new edits.` | A checked recovery point and current artifacts |
+
+Simple questions and small edits stay small. For complex work, the agent chooses relevant specialist Skills and handles optional local evidence configuration.
+
+**Checks performed:** 31 program regressions and three fresh-context small-task trials covering a concise explanation, recovery after edits and building a tool. The two code artifacts were separately tested with additional inputs. [Observed results and scope](docs/usability-evaluation.md).
+
 Does any of this sound familiar?
 
 - Codex follows your prompt, but misses the outcome you had in mind.
@@ -41,7 +53,7 @@ That is the future conduct-best-skills is working toward:
 
 “Best” is defined by your agreed goals, quality requirements and resource limits. Understanding intent means using evidence to clarify and suggest improvements; material changes to the goal remain your decision.
 
-The current version expresses this ambition as seven-stage workflow instructions. Cross-platform context needs available host connections and authorization; experience across tasks needs approved storage and reliable records. The rules still require behavioral evaluation. This vision is not a claim of automatic integrations, autonomous learning or guaranteed results.
+The current version organizes work through build, improve and resume paths, with seven stage references loaded when needed. Cross-platform context still needs host connections and authorization; experience across tasks needs approved storage and real records. Small-task observations are not a claim of automatic integrations, autonomous learning or guaranteed results.
 
 A **Skill** is a folder of instructions an agent reads when needed. This repository provides **one coordinating Skill**, with seven stage references. Your host supplies the model, tools and optional subagents; separately installed specialist Skills supply domain methods.
 
@@ -109,7 +121,19 @@ It produces real check logs, JSON evidence and a Markdown report through **FAIL 
 
 The useful difference: **an old passing check stops counting after its tracked files change; rerunning an upstream check also invalidates dependent evidence.** Each `status` call rechecks versions and explains next actions and remaining attempts. Capability routing explains exclusions before considering preferences.
 
+The companion also supports `start` for a one-criterion task, `verify-ready` for dependency-aware checking and `next` for concise recovery actions. The agent resolves scripts from the actual installed Skill directory, independently of the project location. [Three-command usage](skills/conduct-best-skills/references/runtime.md).
+
 For a real task, ask the host to use $conduct-best-skills, establish acceptance from current requirements, enable project-local evidence, repair failed checks and deliver a report for the current artifacts. The host implements and applies domain judgment; the companion records and checks evidence. See the [runtime guide](skills/conduct-best-skills/references/runtime.md) for contracts, recovery and capability catalogs.
+
+## Find capabilities across sources
+
+The new discovery companion searches local Skills first, then permitted OpenAI Plugins, Anthropic Skills, Skills.sh, SkillsMP and GitHub sources when gaps justify it. It parses real Skill files, records immutable repository revisions, keeps cross-source provenance, explains rankings and suggests complementary capabilities. Native capabilities can satisfy a step without a Skill.
+
+```sh
+python skills/conduct-best-skills/scripts/conduct.py --workspace . discover --root skills --keyword research --need research --output local/discovery.json
+```
+
+External search is opt-in. Credentials, installation, loading, execution and MCP configuration remain separate; discovery never marks a candidate runtime-ready. Availability differs by source, and bounded metadata matching is not a quality or safety certification. See the [configuration and six-source examples](skills/conduct-best-skills/references/discovery.md), [adapter architecture](docs/discovery-design.md) and [actual tests and online limitations](docs/discovery-validation.md).
 
 ## Why a coordinating Skill?
 
@@ -250,5 +274,7 @@ Do not post API keys, private conversations, personal information or unpublished
 ## Acknowledgements and license
 
 Thanks to [Nature Skills](https://github.com/Yuan1z0825/nature-skills) for inspiration in task-oriented examples, installation documentation and academic diagrams, and to **Ian Xiaohei Illustrations** for inspiration in hand-drawn explanatory art and visual storytelling. Their images and text are not reused. See [design notes](docs/visual-design.md).
+
+This revision also draws on [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep) for incremental working artifacts, recovery and stall handling, and Nature Skills for task boundaries, selective loading and independent trials. The implementation is adapted to this project's scope. [Specific observations and choices](docs/reference-study.md).
 
 Code, documentation and original visuals use the [MIT License](LICENSE).

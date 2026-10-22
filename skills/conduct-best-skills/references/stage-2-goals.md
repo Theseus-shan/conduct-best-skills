@@ -2,6 +2,8 @@
 
 输入为有效上下文、原始请求和已有确认记录；输出是逻辑 Task Contract，不强制生成文件。
 
+组合任务按实际要求提炼必要能力及可由原生工具完成的部分，交阶段 3 的[能力发现](discovery.md)。检索关键词只保留公共领域概念；完整 Prompt、私有代码及未发表内容留在当前任务中。
+
 ## 意图与 AI 去模糊化
 
 依次区分 Explicit Request、Success Intent、Project Purpose、Optimization Opportunity。识别任务属于探索、审查、开发、实验、写作或组合任务；保留用户原话，不能把建议改写为用户要求。

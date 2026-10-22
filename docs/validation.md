@@ -1,5 +1,19 @@
 # Documentation and release validation / 文档与发布验证
 
+## 多源发现 / 2026-10-22（最新轮次）
+
+新增六类来源适配器、统一元数据、静态初筛、渐进检索、组合和缓存，并接入 `conduct.py discover` 及七阶段说明。当前程序回归、真实接口限制、独立上下文试用和安装包验证见 [Discovery 验证记录](discovery-validation.md)。以下31项及旧包数量均为上一轮历史，不替代最新结果。
+
+## 可用性改进 / 2026-10-22（后续轮次）
+
+参考用户提供的 ARIS 与 Nature Skills 快照后，增加实现/优化/继续三条任务路径，强化最小完整成果、改前改后证据、专业交接和无进展转向；脚本从实际 Skill 目录定位。新增 `start`、`verify-ready`、`next`，使简单任务无需手写契约，也能按依赖检查并简短续接。具体借鉴见 [reference-study.md](reference-study.md)。
+
+31 项程序回归已通过，其中新增 9 项启动、依赖批量执行与续接检查。三个全新上下文完成简短科学解释、版本漂移后恢复、从零构建 CSV 工具；两项代码产物另以额外输入复验。观察、证据哈希和限制见 [usability-evaluation.md](usability-evaluation.md)。这些小样本不更新原 204 项目录，也不构成前后 A/B 或总体效果保证。
+
+当前发布检查通过：13 份文档、147 个本地链接/锚点、12 张 SVG 与双语命令一致性；技能包 17 个文件，源码包 65 个文件。ZIP 内容与白名单及源文件逐字节一致；在隔离目录解压后，安装版演示及 `start → verify-ready → next` 均实际运行成功，解压源码检查通过。Python 3.10 仅做语法兼容检查。
+
+以下 22 项回归、旧包文件数及早期结论均为各轮历史记录，不能替代当前轮次结果。
+
 ## 可执行闭环 / 2026-10-22（Asia/Hong_Kong）
 
 本轮新增随 Skill 分发的 [conduct.py](../skills/conduct-best-skills/scripts/conduct.py) 与 [demo.py](../skills/conduct-best-skills/scripts/demo.py)。这是本地程序的功能验证，独立于仍为 NOT_RUN 的 204 项 Agent 行为目录，也不替代三组模型 A/B 实验。

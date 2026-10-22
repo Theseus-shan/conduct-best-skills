@@ -14,6 +14,9 @@ SKILL_FILES = [
     "references/stage-5-verification.md", "references/stage-6-refinement.md",
     "references/stage-7-delivery.md", "references/contracts.md",
     "references/learning.md", "references/runtime.md", "scripts/conduct.py", "scripts/demo.py",
+    "references/workflows.md", "templates/task-brief.md",
+    "references/discovery.md", "scripts/discovery.py", "scripts/discovery_core.py",
+    "scripts/discovery_io.py", "scripts/discovery_sources.py",
 ]
 PUBLIC_FILES = [
     "assets/illustrations/shared-route.png", "assets/illustrations/interaction-scenes.png",
@@ -26,6 +29,10 @@ PUBLIC_FILES = [
     "assets/diagrams/orchestration-cn.svg",
     "README_CN.md", "docs/architecture.md", "docs/audit.md", "docs/examples.md",
     "docs/visual-design.md", "docs/validation.md", "docs/implementation-plan.md", "tests/test_runtime.py",
+    "docs/reference-study.md", "docs/usability-evaluation.md", "tests/test_workflow.py",
+    "docs/discovery-design.md", "docs/discovery-adapters.md", "docs/discovery-validation.md",
+    "tests/test_discovery_core.py", "tests/test_discovery_io.py", "tests/test_discovery_sources.py",
+    "tests/test_discovery_engine.py", "evals/discovery.json",
     "assets/branding/hero.svg", "assets/diagrams/workflow.svg",
     "assets/diagrams/workflow.mmd", "assets/diagrams/before-after.svg",
     "assets/diagrams/agent-interaction.svg", "assets/diagrams/orchestration.svg",

@@ -20,6 +20,18 @@
 
 ## 项目主旨
 
+安装后可以直接用自然语言开始，不必选流程、填契约或记工具命令：
+
+| 你想做什么 | 可以直接这样说 | 应拿到什么 |
+| --- | --- | --- |
+| 实现需求 | `用 $conduct-best-skills 把这个需求做成能运行的工具，先跑通最小完整流程，再补齐必要功能。` | 可运行成果、使用方法和实际检查 |
+| 优化项目 | `用 $conduct-best-skills 找出这个项目最影响使用的问题，完成改进，并给出前后依据。` | 针对性修改、改善证据和剩余问题 |
+| 接着继续 | `用 $conduct-best-skills 接着上次做，保留我的新修改，从当前可信进度继续。` | 核对过的续接点和当前版本成果 |
+
+普通问答和一句话修改直接处理。复杂任务由 Agent 按需选择专业 Skill；启用本地证据工具时，也由 Agent 负责配置。
+
+**已做过的检查：**31 项程序回归，以及三个全新上下文的小任务试用，覆盖简短解释、修改后恢复和从零实现。两项代码产物另用额外输入复验。[实际结果与适用范围](docs/usability-evaluation.md)。
+
 你是否也遇到过这些情况？
 
 - Codex 执行了你的 Prompt，却没有充分理解你真正想要的结果。
@@ -41,7 +53,7 @@
 
 这里的“最好”，以你确认的目标、质量要求和资源边界为准。理解意图意味着结合证据主动澄清与提出建议；实质改变目标时，决定权仍在你手中。
 
-当前版本将这一愿景落为七阶段流程规则。跨平台上下文需要宿主提供可用连接及相应授权；跨任务经验积累需要获准存储和可靠记录。这些规则的实际效果仍待行为验收，不能将愿景理解为已经实现全自动连接、学习或结果保证。
+当前版本通过实现、优化和继续三条任务路径组织工作，七阶段参考按需提供判断依据。跨平台上下文仍需宿主连接和授权，跨任务经验积累需要获准存储和真实记录；小样本试用不能理解为全自动连接、学习或结果保证。
 
 **Skill** 是 Agent 按需读取的一组指令文件。本仓库提供**一个总控 Skill**及七个阶段参考文件。模型、工具和可选子代理由宿主提供；专业方法由另行安装的专业 Skills 提供。
 
@@ -108,7 +120,19 @@ python skills/conduct-best-skills/scripts/conduct.py --workspace local/conduct-d
 
 最有用的变化是：**文件已经改了，旧的“测试通过”不会继续被当作当前结论；上游重验也会使依赖它的旧证据失效。** `status` 每次重新核对，给出下一步和剩余尝试次数。能力路由则列出候选为什么不可用，避免高偏好覆盖硬约束。
 
+工具还支持 `start` 建立单条件任务、`verify-ready` 按依赖检查、`next` 提供简短续接动作。Agent 根据实际加载的 Skill 目录定位脚本，安装位置不必在用户项目内。[三步工具用法](skills/conduct-best-skills/references/runtime.md)。
+
 实际任务可发送：“使用 $conduct-best-skills 完成这个项目的修复；按当前要求建立验收，启用项目内证据记录，遇到失败定向修正，交付当前版本的验证报告。”宿主负责实现和专业判断，本地工具负责记录和核验。完整契约、恢复及能力目录格式见[工具指南](skills/conduct-best-skills/references/runtime.md)。
+
+## 从多个来源发现适用能力
+
+新增发现工具优先搜索本地 Skill；有缺口且允许外搜时，再查询 OpenAI Plugins、Anthropic Skills、Skills.sh、SkillsMP 和 GitHub。它解析真实 Skill 文件、记录仓库固定版本、保留多来源线索、解释排序并建议互补组合。原生能力足够的步骤无需额外 Skill。
+
+```sh
+python skills/conduct-best-skills/scripts/conduct.py --workspace . discover --root skills --keyword research --need research --output local/discovery.json
+```
+
+外搜需要启用；凭据使用、安装、加载、执行和添加 MCP 仍分别遵守授权。发现本身不会把候选标成可运行，各来源的可用范围也不相同；有界元数据匹配不代表质量或安全认证。查看[配置与六源示例](skills/conduct-best-skills/references/discovery.md)、[适配器架构](docs/discovery-design.md)、[实际测试和在线限制](docs/discovery-validation.md)。
 
 ## 为什么需要总控 Skill？
 
@@ -249,5 +273,7 @@ python scripts/check_release.py
 ## 致谢与许可证
 
 感谢 [Nature Skills](https://github.com/Yuan1z0825/nature-skills) 为任务导向示例、安装说明与学术图解提供参考；感谢 **Ian Xiaohei Illustrations** 带来的手绘科普与视觉叙事灵感。本项目未复用其图片或文案，详见[设计说明](docs/visual-design.md)。
+
+本轮还参考 [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep) 的最小完整实现、恢复与停滞处理，以及 Nature Skills 的任务边界、按需加载和独立试用方法，并按本项目范围重新设计。[具体借鉴与取舍](docs/reference-study.md)。
 
 代码、文档和原创视觉资源采用 [MIT License](LICENSE)。

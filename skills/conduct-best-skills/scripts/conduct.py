@@ -132,6 +132,19 @@ def validate(contract, root):
     return contract
 
 
+def starter_contract(goal, requirement, artifacts, inputs, argv, timeout=60, attempts=3):
+    """Build a real one-task contract from explicit facts, without placeholder checks."""
+    command = list(argv)
+    if command and command[0] == "--":
+        command.pop(0)
+    require(command, "Provide the real check command after --; no default passing check is generated")
+    return {"schema_version": 1, "goal": goal,
+            "tasks": [{"id": "work", "objective": goal, "depends_on": [], "criteria": ["acceptance"]}],
+            "criteria": [{"id": "acceptance", "kind": "Mandatory", "requirement": requirement,
+                          "artifacts": artifacts, "inputs": inputs,
+                          "check": {"argv": command, "timeout_seconds": timeout, "max_attempts": attempts}}]}
+
+
 class Workspace:
     def __init__(self, root):
         self.root = Path(root).resolve()
@@ -356,6 +369,36 @@ class Workspace:
             self.save(state)
             return state["operations"][key]
 
+    def verify_ready(self):
+        """Check each eligible non-PASS criterion at most once; do not retry failures."""
+        attempted, records, refused = set(), [], []
+        while True:
+            contract, _ = self.load()
+            report = self.status()
+            tasks = {t["id"]: t["status"] for t in report["tasks"]}
+            rows = {c["id"]: c for c in report["criteria"]}
+            selected = None
+            for task in contract["tasks"]:
+                if tasks[task["id"]] in {"BLOCKED", "WAITING"}:
+                    continue
+                for key in task["criteria"]:
+                    row = rows[key]
+                    if key not in attempted and row["status"] != "PASS" and row["remaining_attempts"] > 0:
+                        selected = key
+                        break
+                if selected:
+                    break
+            if selected is None:
+                break
+            attempted.add(selected)
+            try:
+                records.append(self.verify(selected))
+            except ContractError as exc:
+                refused.append({"criterion": selected, "reason": str(exc)})
+        current = self.status()
+        return {"checks": records, "refused": refused, "validation_status": current["validation_status"],
+                "task_completion": current["task_completion"], "tasks": current["tasks"], "criteria": current["criteria"]}
+
     def recover(self, note):
         require(isinstance(note, str) and note.strip(), "Recovery requires an observation of process/effect state")
         with self.locked():
@@ -431,13 +474,47 @@ def markdown(report):
     return "\n".join(lines)
 
 
+def next_steps(report):
+    lines = [report["goal"], f"{report['validation_status']} / {report['task_completion']}"]
+    for task in report["tasks"]:
+        if task["status"] != "VERIFIED":
+            lines.append(f"- {task['id']}: {task['next_action']}")
+    for row in report["criteria"]:
+        if row["status"] != "PASS":
+            lines.append(f"  {row['id']} [{row['kind']}, {row['status']}]: {row['reason']} "
+                         f"(attempts left: {row['remaining_attempts']}; evidence: {row['evidence'] or 'none'})")
+    if report["task_completion"] == "COMPLETE":
+        lines.append("Required work is complete; deliver within the recorded evidence scope.")
+    return "\n".join(lines)
+
+
 def main(argv=None):
+    # Machine-readable reports must round-trip non-ASCII projects on Windows too.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workspace", default=".", help="Project root; state is stored in .conduct/")
     sub = parser.add_subparsers(dest="command", required=True)
+    discovery_parser = sub.add_parser("discover", help="Discover Skill metadata without installing or executing candidates")
+    from discovery import add_arguments as discovery_arguments, execute as discover_execute
+    from discovery_core import DiscoveryError
+    discovery_arguments(discovery_parser)
     init = sub.add_parser("init", help="Validate and save a local contract; never overwrite")
     init.add_argument("--contract", required=True)
+    start = sub.add_parser("start", help="Create a one-task contract from a goal, tracked files and a real check")
+    start.add_argument("--goal", required=True)
+    start.add_argument("--requirement", required=True)
+    start.add_argument("--artifact", action="append", required=True)
+    start.add_argument("--input", action="append", required=True)
+    start.add_argument("--timeout", type=int, default=60)
+    start.add_argument("--attempts", type=int, default=3)
+    start.add_argument("check", nargs=argparse.REMAINDER, help="The reviewed check argv after --")
     sub.add_parser("status", help="Rehash files and return current evidence and next actions")
+    next_parser = sub.add_parser("next", help="Show a compact, freshly checked recovery point")
+    next_parser.add_argument("--format", choices=["text", "json"], default="text")
+    ready = sub.add_parser("verify-ready", help="Run eligible non-PASS checks once in dependency order")
+    ready.add_argument("--execute", action="store_true")
     check = sub.add_parser("verify", help="Execute a reviewed check, recording version-bound evidence")
     check.add_argument("criterion")
     check.add_argument("--execute", action="store_true", help="Required acknowledgement that the command was reviewed")
@@ -458,9 +535,21 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         ws = Workspace(args.workspace)
-        if args.command == "init":
+        if args.command == "discover":
+            try:
+                return discover_execute(args)
+            except DiscoveryError as exc:
+                raise ContractError(f"{exc.code}: {exc}") from exc
+        elif args.command == "init":
             ws.initialize(read_json(Path(args.contract)))
             result = ws.status()
+        elif args.command == "start":
+            ws.initialize(starter_contract(args.goal, args.requirement, args.artifact, args.input,
+                                           args.check, args.timeout, args.attempts))
+            result = ws.status()
+        elif args.command == "verify-ready":
+            require(args.execute, "Review all configured checks and effects, then supply --execute within existing authorization")
+            result = ws.verify_ready()
         elif args.command == "verify":
             require(args.execute, "Review the command and its effects, then supply --execute within existing authorization")
             result = ws.verify(args.criterion)
@@ -475,14 +564,17 @@ def main(argv=None):
             result = ws.recover(args.note)
         else:
             result = ws.status()
+            if args.command == "next" and args.format == "text":
+                print(next_steps(result))
+                return 0 if result["validation_status"] == "VERIFIED" and result["task_completion"] == "COMPLETE" else 1
             if args.command == "report" and args.format == "markdown":
                 print(markdown(result))
-                return 0 if result["validation_status"] == "VERIFIED" else 1
+                return 0 if result["validation_status"] == "VERIFIED" and result["task_completion"] == "COMPLETE" else 1
         print(json.dumps(result, ensure_ascii=False, indent=2))
         if args.command == "verify":
             return 0 if result["status"] == "PASS" else 1
-        if args.command in {"status", "report"}:
-            return 0 if result["validation_status"] == "VERIFIED" else 1
+        if args.command in {"status", "report", "next", "verify-ready"}:
+            return 0 if result["validation_status"] == "VERIFIED" and result["task_completion"] == "COMPLETE" else 1
         return 0
     except (ContractError, OSError, ValueError, KeyError, TypeError) as exc:
         print(json.dumps({"error": str(exc)}, ensure_ascii=False), file=sys.stderr)

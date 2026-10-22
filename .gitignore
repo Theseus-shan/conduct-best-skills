@@ -6,6 +6,9 @@
 /.agents/
 /.codex/
 /.conduct/
+/.conduct-discovery/
+/Auto-claude-code-research-in-sleep-main/
+/nature-skills-main/
 .env
 .env.*
 *.pem
