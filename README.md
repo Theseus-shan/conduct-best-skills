@@ -6,7 +6,7 @@
 
 **Turn intent into evidence.**
 
-A coordinating Skill for research and development that connects context, capabilities and execution around the outcome you actually want—with evidence to assess the result.
+An Agent Harness workbench for research and development: understand the task, choose a route, coordinate Skills, MCP and tools, and improve the result against explicit evidence.
 
 [![MIT](https://img.shields.io/badge/license-MIT-55d6be)](LICENSE)
 [![Instruction Skill](https://img.shields.io/badge/type-instruction_Skill-92b4ff)](skills/conduct-best-skills/SKILL.md)
@@ -30,7 +30,7 @@ After installation, start in ordinary language. You do not need to select a work
 
 Simple questions and small edits stay small. For complex work, the agent chooses relevant specialist Skills and handles optional local evidence configuration.
 
-**Current checks:** 154 program regressions (152 passed, 2 environment-dependent skips), browser checks of the workbench and package extraction checks. The earlier three fresh-context small-task trials remain a separate observation, not a full behavior evaluation. [Validation and scope](docs/validation.md).
+**Current checks:** 164 program regressions (162 passed, 2 environment-dependent skips), browser checks of the workbench and package extraction checks. The earlier three fresh-context small-task trials remain a separate observation, not a full behavior evaluation. [Validation and scope](docs/validation.md).
 
 Does any of this sound familiar?
 
@@ -131,6 +131,16 @@ Each workspace has editable `.conduct/preferences.json`, with optional `.conduct
 `$conduct-preferences` opens a live map of project defaults → task overrides → current prompt → effective rules. It rereads files about every two seconds and provides a plain-language editor with validation and concurrent-edit protection. The map reports configured behavior, not evidence that a Skill ran. Current task context is synchronized by the agent, with a visible timestamp; the local viewer stops updating when its process stops. [Commands, installation and preference details](docs/commands-and-preferences.md).
 
 ## Visual workbench
+
+The task cockpit follows the full lifecycle: **context → goals → planning → execution → verification → refinement → delivery**. Edit objectives, context, constraints, approach, acceptance criteria, improvement baseline, next steps and delivery requirements in natural language. Project defaults and task overrides remain separate, with the current prompt taking precedence.
+
+![Agent Harness task cockpit with seven stages and natural-language task intent; synthetic demonstration.](assets/workbench/harness.png)
+
+*All projects, task descriptions, calls and feedback in these screenshots are synthetic.*
+
+The cockpit connects intent to selected capabilities and recorded evidence. Calls retain the task brief version used at invocation; changed goals or acceptance requirements flag older calls for review. Optional execution contracts expose dependencies, check status, evidence, remaining attempts and unresolved operations. Browsing does not run checks. Written intent, recorded invocation and verified output are different facts.
+
+This is an instruction Skill with a local companion, not a host-level interceptor. Codex projects/chats use snapshots, call history has partial coverage, and improvement guidance does not certify a globally optimal solution.
 
 Start a project with your own working preferences, then follow its tasks, capability usage and outcomes in one local dashboard. The dark interface uses a quiet star field, luminous connections and moving light traces to show **work → task → Skill / MCP / tool → recorded result**. Pause the motion at any time; reduced-motion system settings keep the view still.
 

@@ -498,6 +498,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workspace", default=".", help="Project root; state is stored in .conduct/")
     sub = parser.add_subparsers(dest="command", required=True)
+    harness_parser = sub.add_parser('harness', help='Task objectives, route, acceptance and improvement context')
+    from harness import add_arguments as harness_arguments, execute as harness_execute
+    harness_arguments(harness_parser)
     preference_parser = sub.add_parser("preferences", help="Workspace defaults, task overrides and live preference map")
     from preferences import add_arguments as preference_arguments, execute as preference_execute
     preference_arguments(preference_parser)
@@ -546,7 +549,9 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         ws = Workspace(args.workspace)
-        if args.command == "preferences":
+        if args.command == "harness":
+            result = harness_execute(args)
+        elif args.command == "preferences":
             result = preference_execute(args)
         elif args.command == "activity":
             result = activity_execute(args)

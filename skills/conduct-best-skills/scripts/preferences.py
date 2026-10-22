@@ -258,7 +258,10 @@ def view(root, selected=None, types=None):
     result["context_updated_at"] = current.get("recorded_at") if same_task else None
     from activity import report
     result["activity"] = report(root)
-    result["tasks"] = sorted(set(result["tasks"]) | {c["task"] for c in report(root)["calls"]} | ({task} if task else set()))
+    from harness import dashboard, tasks, execution
+    result['harness'] = dashboard(root, task, result['activity']['calls'])
+    result['execution'] = execution(root)
+    result["tasks"] = sorted(set(result["tasks"]) | set(tasks(root)) | {c["task"] for c in result['activity']["calls"]} | ({task} if task else set()))
     return result
 
 
@@ -327,7 +330,7 @@ def make_server(root, port=0, home=None):
 
         def do_POST(self):
             parts = urlsplit(self.path)
-            if not self.authorized() or parts.path not in {f"/{token}/api/preferences", f"/{token}/api/rules", f"/{token}/api/activity", f"/{token}/api/projects"} or self.headers.get("X-Conduct-Edit") != "1":
+            if not self.authorized() or parts.path not in {f"/{token}/api/preferences", f"/{token}/api/rules", f"/{token}/api/activity", f"/{token}/api/projects", f"/{token}/api/harness"} or self.headers.get("X-Conduct-Edit") != "1":
                 return self.send(403, {"error": "Local editor required"})
             try:
                 length = int(self.headers.get("Content-Length", "0"))
@@ -339,6 +342,9 @@ def make_server(root, port=0, home=None):
                     from workbench import register, unregister
                     require(body.get("action") in {"register", "unregister"}, "Invalid project action")
                     result = register(home, body["root"], body.get("name")) if body["action"] == 'register' else unregister(home, body["id"])
+                elif parts.path.endswith('/harness'):
+                    from harness import save as save_brief
+                    result = save_brief(self.workspace(query), body['task'], body['data'], body.get('revision'))
                 elif parts.path.endswith('/rules'):
                     result = edit_rule(self.workspace(query), body)
                 elif parts.path.endswith('/activity'):

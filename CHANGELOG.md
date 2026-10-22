@@ -59,3 +59,10 @@
 - 深蓝黑界面、稀疏星空与发光调用连线，光点沿工作、任务、能力、结果流动；支持暂停和减少动态效果，不冒充实时执行。
 - 双语 README 加入真实前端截图和使用入口；更新架构、使用示例、验证、安全、贡献及视觉说明。
 - 新增只读合成展示入口，用虚构项目/聊天/调用/反馈制作公开截图，避免发布真实工作台信息。
+
+## Agent Harness cockpit — 2026-10-22
+
+- Added seven-stage task cockpit with eight natural-language brief fields, revision-safe editing and project/task isolation.
+- Bound invocation evidence to task intent; changed goals or acceptance flag older calls for review without deleting history.
+- Added evidence-gap guidance and read-only project execution dependencies, check evidence, remaining attempts and unknown-operation status.
+- Updated product positioning, skill continuation guidance, bilingual documentation and synthetic cockpit showcase. The companion remains host-driven with partial recorded history.

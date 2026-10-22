@@ -49,6 +49,8 @@ def main():
         run([installed / "scripts/conduct.py", "--workspace", preference_project, "preferences", "init"], destination)
         run([installed / "scripts/conduct.py", "--workspace", preference_project, "preferences", "context", "--type", "coding"], destination)
         run([suite / "conduct-best-skills/scripts/conduct.py", "--workspace", preference_project, "preferences", "show"], destination)
+        run([installed / "scripts/conduct.py", "--workspace", preference_project, "harness", "set", "--task", "intro", "--expected", "missing", "--objective", "Draft introduction"], destination)
+        run([installed / "scripts/conduct.py", "--workspace", preference_project, "harness", "show", "--task", "intro"], destination)
         index = destination / "workbench-index"
         run([installed / "scripts/conduct.py", "--workspace", preference_project, "workbench", "onboard", "--home", index], destination)
         snapshot = destination / "snapshot.json"

@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CORE = ROOT / 'skills/conduct-best-skills'
 sys.path.insert(0, str(CORE / 'scripts'))
 import activity
+import harness
 import preferences
 
 
@@ -35,6 +36,15 @@ def seed(parent):
     preferences.save(paper, {'schema_version': 1, 'workflow': {'language': '简体中文'}, 'rules': rules},
                      expected=preferences.read(paper)['revision'])
     preferences.context(paper, '引言初稿', ['paper-writing'], [])
+    harness.save(paper, '引言初稿', {**harness.empty(), 'stage': 'planning',
+        'objective': '形成一份论证清晰、可核查的论文引言初稿。',
+        'context': '依据作者提供的研究问题、结果摘要与已核验文献；材料不足处先保留待核对项。',
+        'constraints': '保留事实、引用和必要局限；不补造结果，不扩大结论。',
+        'approach': '先梳理论证结构，再由 nature-writing 起草，结合 Anti-Defensive Writing 检查防御性表达；最后逐项核对引用。',
+        'acceptance': '研究缺口清楚；每项关键主张有依据；引用与原文匹配；未决问题单列。',
+        'baseline': '对照初稿检查重复铺垫和无依据的强调。必要标准通过后交付，不以自评分代替改善证据。',
+        'next_step': '确认研究缺口与现有文献的对应关系，再进入起草。',
+        'delivery': '可编辑引言、引用核对清单及待解决问题。以上均为合成展示。'}, 'missing')
     activity.set_enabled(paper, True)
     for number, (task, kind, name, outcome, rating) in enumerate([
         ('引言初稿', 'skill', 'nature-writing', 'succeeded', 'helpful'),

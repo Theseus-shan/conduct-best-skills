@@ -78,6 +78,9 @@ def record(root, task, kind, name, event, call_id, note="", evidence=None, ratin
             require(not states.intersection({"succeeded", "failed"}), "Each invocation has one terminal outcome; retries need a new call ID")
         if event != "feedback":
             require(event not in states, "Duplicate lifecycle event; reuse the original event ID for retries")
+        from harness import binding
+        invocation = next((e for e in earlier if e['event'] == 'invoked'), None)
+        payload['brief_revision'] = invocation.get('brief_revision', 'missing') if invocation else binding(root, task)
         payload["at"] = datetime.now(timezone.utc).isoformat()
         data["events"].append(payload)
         return payload
@@ -104,7 +107,8 @@ def report(root, task=None):
         first, states = events[0], {e["event"] for e in events}
         reviews = [e for e in events if e["event"] == "feedback"]
         outcome = "verified" if "verified" in states else "failed" if "failed" in states else "succeeded" if "succeeded" in states else "unknown"
-        calls.append({"call_id": key, "work": first.get("work", "default"), "task": first["task"], "kind": first["kind"], "name": first["name"],
+        invocation = next((e for e in events if e['event'] == 'invoked'), first)
+        calls.append({"call_id": key, "brief_revision": invocation.get('brief_revision', 'missing'), "work": first.get("work", "default"), "task": first["task"], "kind": first["kind"], "name": first["name"],
                       "invoked": "invoked" in states, "outcome": outcome, "states": list(dict.fromkeys(e["event"] for e in events)),
                       "rating": reviews[-1]["rating"] if reviews else "unknown", "feedback": reviews[-1]["note"] if reviews else "",
                       "evidence": list(dict.fromkeys(x for e in events for x in e.get("evidence", []))),

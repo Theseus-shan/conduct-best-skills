@@ -92,3 +92,11 @@ The suite contains one coordinating core and 13 focused entry Skills. Their boun
 Rule precedence is current prompt → task override → project default. The dashboard never writes global preferences. The loopback server uses a random URL token, validates Host and write headers, and is not a public hosting service. `workbench onboard` preserves existing AGENTS.md guidance with a backup; it only applies to the explicitly selected project.
 
 The flow graph derives work/task/capability/result edges from saved calls. It shows up to eight recent calls per view, preserves failure and unknown states, follows activity filters, supports pause and reduced motion, and retains the table for complete review. [Usage](commands-and-preferences.md) · [Security](../SECURITY.md).
+
+## Agent Harness cockpit
+
+`harness.py` owns project-local task briefs, optimistic revisions and evidence orientation. `preferences.view` joins these with resolved preferences and partial invocation history. The frontend presents eight natural-language fields through seven stages. `/api/harness` uses the same loopback token, Host/write-header checks and registered-project scope as other editor endpoints.
+
+An invocation snapshots the brief contract hash; outcome/feedback keep it. Changing context, objective, constraints, approach, acceptance, baseline or delivery flags prior calls for review. Changing focus stage or next step does not. Legacy calls remain unbound and readable. This is task-intent versioning, separate from file-version validation.
+
+The optional project execution contract is read through `Workspace.status()`: dependencies, check evidence, file drift, remaining attempts and unresolved operations. The cockpit does not execute checks or silently synchronize its brief into this contract. Missing/invalid execution state is explicitly shown. The host Agent reconciles natural-language intent with executable checks under existing authorization.

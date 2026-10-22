@@ -99,3 +99,9 @@ The interactive workbench uses midnight navy (`#080d19`), slate panels, readable
 The layout was informed by [Plane](https://github.com/makeplane/plane)'s project organization and [shadcn Dashboard](https://ui.shadcn.com/examples/dashboard)'s information hierarchy. Layout, CSS, SVG wires and motion are independently implemented without copied assets or code.
 
 Public screenshots [workflow](../assets/workbench/workflow.png) and [preferences](../assets/workbench/preferences.png) render the actual frontend with `scripts/preview_workbench.py`. All projects, chats, evidence references and feedback are synthetic. The preview does not import a real index. PNGs are captured from the browser, not AI-generated mockups; no personal screenshot is used. Run the preview to inspect motion, which a still image cannot show.
+
+## Harness 驾驶舱
+
+沿用深色星系背景、克制的青蓝与紫色高光。默认视图以目标卡片开场，七阶段导航连接上下文、目标、规划、执行、验证、改进与交付；双栏展示阶段信息、证据缺口、能力安排和版本关系。自然语言编辑器按八类任务信息分组，窄屏改为单栏。执行依赖和验收详情采用可展开项，避免一次暴露全部细节。
+
+`assets/workbench/harness.png` 展示合成任务驾驶舱。填写状态、关注阶段、调用结果与实际验证分别编码；阶段按钮只切换阅读视角，不暗示推进或完成。

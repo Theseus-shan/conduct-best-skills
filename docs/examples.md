@@ -108,3 +108,9 @@ This is a synthetic usage recipe, not a claim of a completed research project.
 Expected: the host checks Skill availability and interprets the task; the current prompt exclusion does not overwrite saved defaults. The preference map updates after files are saved. The call constellation and table include only explicit records, preserving failures and unknown feedback. Codex projects/chats carry a snapshot timestamp; missing history is not filled in. Other projects do not inherit settings.
 
 For a public visual preview without real workspace data, run `python scripts/preview_workbench.py`. The preview rejects edits; use a separate disposable project with the actual workbench server to test saves.
+
+## 从任务意图到交付
+
+“打开 Agent Harness 工作台，为引言初稿保存目标、材料与约束：先梳理论证，再按本项目偏好起草，逐项核对引用；交付可编辑稿与未决问题。之后我会在驾驶舱改验收要求。”
+
+Agent 读取本项目偏好和任务说明，补充已知实施理由、基线与下一步，按实际发生记录能力调用。验收要求改变后，驾驶舱将旧调用标为需复核；Agent 对照新要求重新检查成果，给出有证据的交付和后续建议。示例不代表已执行科研任务。

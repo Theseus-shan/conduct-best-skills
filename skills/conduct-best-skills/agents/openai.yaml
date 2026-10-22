@@ -1,4 +1,4 @@
 interface:
-  display_name: "Conduct Best Skills · 把目标做成成果"
+  display_name: "Conduct Best Skills · Agent Harness"
   short_description: "实现需求、改进项目或接续工作，按需组合专业能力，交付可用成果和真实验证依据"
   default_prompt: "请使用 $conduct-best-skills 完成当前任务，先做出最小可用成果，再针对实际问题改进，给我成果入口和验证依据。"

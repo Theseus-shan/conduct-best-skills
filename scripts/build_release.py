@@ -10,7 +10,7 @@ SKILL_PREFIX = "skills/conduct-best-skills/"
 SKILL_FILES = [
     "SKILL.md", "agents/openai.yaml",
     "references/commands.md", "references/command-scope.md", "references/preferences.md",
-    "scripts/preferences.py", "scripts/activity.py", "scripts/workbench.py", "assets/preferences.html", "references/workbench.md",
+    "scripts/preferences.py", "scripts/activity.py", "scripts/workbench.py", "scripts/harness.py", "assets/preferences.html", "references/workbench.md",
     "references/stage-1-context.md", "references/stage-2-goals.md",
     "references/stage-3-planning.md", "references/stage-4-execution.md",
     "references/stage-5-verification.md", "references/stage-6-refinement.md",
@@ -24,7 +24,7 @@ COMMAND_NAMES = ("context", "goals", "plan", "discover", "build", "improve", "re
 COMMAND_FILES = [f"skills/conduct-{name}/{file}" for name in COMMAND_NAMES
                  for file in ("SKILL.md", "agents/openai.yaml")]
 PUBLIC_FILES = [
-    "assets/workbench/workflow.png", "assets/workbench/preferences.png", "scripts/preview_workbench.py",
+    "tests/test_harness.py", "assets/workbench/harness.png", "assets/workbench/workflow.png", "assets/workbench/preferences.png", "scripts/preview_workbench.py",
     "assets/illustrations/shared-route.png", "assets/illustrations/interaction-scenes.png",
     "assets/illustrations/generation-prompts.json",
     "assets/illustrations/intent-to-evidence.png",
